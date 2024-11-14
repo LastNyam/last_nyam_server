@@ -14,7 +14,7 @@ public class RecommendRecipe {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private FoodPost foodPost;
 
     @Column(nullable = false)

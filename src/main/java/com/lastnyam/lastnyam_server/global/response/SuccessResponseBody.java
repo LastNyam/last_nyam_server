@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public final class SuccessResponseBody<T> extends ResponseBody<T> {
-    private final String SUCCESS = "success";
+    private static final String SUCCESS = "success";
     private final T data;
 
     SuccessResponseBody() {

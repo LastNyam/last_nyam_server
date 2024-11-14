@@ -14,12 +14,12 @@ public class LikeStore {
     @Column(name = "like_store_id")
     private Long id;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private User user;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private Store store;
 
     @Column(nullable = false)

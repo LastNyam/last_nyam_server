@@ -14,7 +14,7 @@ public class Review {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private Reservation reservation;
 
     @Column(nullable = false)

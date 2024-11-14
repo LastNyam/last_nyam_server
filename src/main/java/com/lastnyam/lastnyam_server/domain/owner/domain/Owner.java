@@ -1,6 +1,7 @@
 package com.lastnyam.lastnyam_server.domain.owner.domain;
 
 import com.lastnyam.lastnyam_server.domain.store.domain.Store;
+import com.lastnyam.lastnyam_server.global.auth.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,5 +26,5 @@ public class Owner {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OwnerRole role;
+    private UserRole role;
 }
