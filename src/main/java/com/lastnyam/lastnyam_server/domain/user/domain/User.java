@@ -1,7 +1,9 @@
 package com.lastnyam.lastnyam_server.domain.user.domain;
 
+import com.lastnyam.lastnyam_server.global.auth.UserRole;
 import com.lastnyam.lastnyam_server.global.domain.AuditEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +34,13 @@ public class User extends AuditEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
+
+    @Builder
+    public User(String phoneNumber, String nickname, String password, boolean acceptsMarketing, UserRole role) {
+        this.phoneNumber = phoneNumber;
+        this.nickname = nickname;
+        this.password = password;
+        this.acceptsMarketing = acceptsMarketing;
+        this.role = UserRole.ROLE_USER;
+    }
 }
