@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -19,6 +20,7 @@ public class User extends AuditEntity {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
+    @Setter
     @Column(nullable = false, unique = true)
     private String nickname;
 

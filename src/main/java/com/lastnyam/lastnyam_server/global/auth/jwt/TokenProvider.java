@@ -33,9 +33,9 @@ public class TokenProvider implements AuthenticationProvider {
     public String createToken(Long id, UserRole role) {
         Claims claims = Jwts.claims()
                 .subject("ACCESS_TOKEN")
+                .add("id", id)
+                .add("role", role)
                 .build();
-        claims.put("id", id);
-        claims.put("role", role);
 
         Date now = new Date(System.currentTimeMillis());
 
@@ -58,7 +58,7 @@ public class TokenProvider implements AuthenticationProvider {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            return (String) claims.get("id");
+            return claims.get("id").toString();
 
         } catch (ExpiredJwtException e) {
             log.error("JWT가 만료되었습니다.");

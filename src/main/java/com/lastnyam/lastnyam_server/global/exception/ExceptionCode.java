@@ -19,6 +19,7 @@ public enum ExceptionCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "사용자를 찾을 수 없음"),
     DUPLICATED_PHONE_NUMBER(HttpStatus.CONFLICT, "U002", "휴대폰 번호 중복"),
     DUPLICATED_NICKNAME(HttpStatus.CONFLICT, "U003", "닉네임 중복"),
+    PASSWORD_INVALID(HttpStatus.BAD_REQUEST, "U004", "비밀번호가 일치하지 않음"),
 
     ;
 
