@@ -28,7 +28,7 @@ jobs:
         with:
           java-version: 21
 
-      - name: make application.yml
+      - name: Make application.yml
         run: |
           mkdir -p ./src/test/resources
           cd ./src/test/resources
