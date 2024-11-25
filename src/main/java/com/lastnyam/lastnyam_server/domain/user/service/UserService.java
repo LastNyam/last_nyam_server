@@ -1,8 +1,10 @@
 package com.lastnyam.lastnyam_server.domain.user.service;
 
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
+import com.lastnyam.lastnyam_server.domain.user.dto.request.UpdateNicknameRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.LoginRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.SignupRequest;
+import com.lastnyam.lastnyam_server.domain.user.dto.response.CheckNicknameResponse;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.LoginResponse;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.auth.jwt.TokenProvider;
@@ -58,16 +60,23 @@ public class UserService {
                 .build();
     }
 
+    public CheckNicknameResponse checkNickname(String nickname) {
+        boolean isDuplicated = userRepository.findByNickname(nickname).isPresent();
+        return CheckNicknameResponse.builder()
+                .duplicated(isDuplicated)
+                .build();
+    }
+
     @Transactional
-    public void updateNickname(Long userId, String nickname) {
+    public void updateNickname(Long userId, UpdateNicknameRequest request) {
         User savedUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
 
-        userRepository.findByNickname(nickname)
+        userRepository.findByNickname(request.getNickname())
                 .ifPresent(i -> {
                     throw new ServiceException(ExceptionCode.DUPLICATED_NICKNAME);
                 });
 
-        savedUser.setNickname(nickname);
+        savedUser.setNickname(request.getNickname());
     }
 }
