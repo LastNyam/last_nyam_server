@@ -11,7 +11,7 @@ on:
 
 env:
   S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
-  RESOURCE_PATH: ./application.yaml
+  RESOURCE_PATH: ./src/main/resources
   CODE_DEPLOY_APPLICATION_NAME: ${{ secrets.AWS_CODE_DEPLOY_APPLICATION_NAME }}
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: ${{ secrets.AWS_CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
 
@@ -30,7 +30,9 @@ jobs:
 
       - name: make application.yml
         run: |
-          touch ${{ env.RESOURCE_PATH }}
+          mkdir -p ./src/test/resources
+          cd ./src/test/resources
+          touch ./application.yml
           echo "${{ secrets.APPLICATION }}" > ./application.yml
 
       - name: Grant execute permission for gradlew
