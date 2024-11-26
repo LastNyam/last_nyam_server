@@ -1,6 +1,6 @@
 #! /bin/bash
-PROJECT_NAME="github_action"
-JAR_PATH="/home/ubuntu/github_action/build/libs/*.jar"
+PROJECT_NAME="lastnyam"
+JAR_PATH="/home/ubuntu/$PROJECT_NAME/build/libs/*.jar"
 DEPLOY_PATH=/home/ubuntu/$PROJECT_NAME/
 DEPLOY_LOG_PATH="/home/ubuntu/$PROJECT_NAME/deploy.log"
 DEPLOY_ERR_LOG_PATH="/home/ubuntu/$PROJECT_NAME/deploy_err.log"
@@ -29,7 +29,7 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포" >> $DEPLOY_LOG_PATH
-nohup java -jar -Dspring.profiles.active=local $DEPLOY_JAR --server.port=8081 >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
+nohup java -jar -Dspring.profiles.active=local $DEPLOY_JAR --server.port=8080 >> $APPLICATION_LOG_PATH 2> $DEPLOY_ERR_LOG_PATH &
 
 sleep 3
 
