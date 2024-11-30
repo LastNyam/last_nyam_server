@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(ExceptionCode.BINDING_ERROR.getStatus())
                 .body(ResponseUtil.createFailureResponse(ExceptionCode.BINDING_ERROR, customMessage));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ResponseBody<Void>> handleNotFound(NoResourceFoundException e) {
+        return ResponseEntity.status(ExceptionCode.INVALID_ENDPOINT.getStatus())
+                .body(ResponseUtil.createFailureResponse(ExceptionCode.INVALID_ENDPOINT, "잘못된 엔드포인트입니다."));
     }
     
     @ExceptionHandler(Exception.class)
