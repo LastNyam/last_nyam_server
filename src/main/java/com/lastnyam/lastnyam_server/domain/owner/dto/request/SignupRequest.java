@@ -1,8 +1,7 @@
-package com.lastnyam.lastnyam_server.domain.user.dto.request;
+package com.lastnyam.lastnyam_server.domain.owner.dto.request;
 
 import com.lastnyam.lastnyam_server.global.request.RequestRegex;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -20,10 +19,7 @@ public class SignupRequest {
             message = "비밀번호는 영어 대소문자와 숫자 또는 특수문자 중 2종류 이상이 포함되어야 합니다.")
     private String password;
 
-    @NotBlank(message = "닉네임은 빈 값일 수 없습니다.")
-    @Pattern(regexp = RequestRegex.NICKNAME, message = "닉네임은 한글, 영문, 숫자만 입력 가능합니다.")
-    private String nickname;
-
-    @NotNull(message = "마케팅 동의 여부는 빈 값일 수 없습니다.")
-    private Boolean acceptMarketing;
+    @NotBlank(message = "사업자등록번호는 빈 값일 수 없습니다.")
+    @Pattern(regexp = RequestRegex.BUSINESS_NUMBER, message = "사업자등록번호는 숫자 10자리로만 이루어져야 합니다.")
+    private String businessNumber;
 }

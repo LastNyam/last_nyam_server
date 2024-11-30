@@ -1,5 +1,7 @@
-package com.lastnyam.lastnyam_server.domain.user.domain;
+package com.lastnyam.lastnyam_server.global.auth.domain;
 
+import com.lastnyam.lastnyam_server.domain.owner.domain.Owner;
+import com.lastnyam.lastnyam_server.domain.user.domain.User;
 import com.lastnyam.lastnyam_server.global.auth.UserRole;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +17,11 @@ public class UserPrincipal implements UserDetails {
     private UserRole role;
 
     public UserPrincipal(User user) {
+        this.userId = user.getId();
+        this.role = user.getRole();
+    }
+
+    public UserPrincipal(Owner user) {
         this.userId = user.getId();
         this.role = user.getRole();
     }

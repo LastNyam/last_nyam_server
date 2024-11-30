@@ -1,7 +1,7 @@
 package com.lastnyam.lastnyam_server.global.auth.jwt;
 
-import com.lastnyam.lastnyam_server.domain.user.domain.UserPrincipal;
-import com.lastnyam.lastnyam_server.domain.user.service.UserDetailsService;
+import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
+import com.lastnyam.lastnyam_server.global.auth.service.LastnyamUserDetailsService;
 import com.lastnyam.lastnyam_server.global.auth.UserRole;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -25,7 +25,7 @@ import java.util.Date;
 public class TokenProvider implements AuthenticationProvider {
     // TODO. 만료 시간 30분으로 해둠. 필요 시 추후 변경
     private final long EXPIRATION_TIME = 30*60*1000L;
-    private final UserDetailsService userDetailsService;
+    private final LastnyamUserDetailsService userDetailsService;
 
     @Value("${jwt.secret-key}")
     private String secretKey;

@@ -1,7 +1,7 @@
 package com.lastnyam.lastnyam_server.global.config;
 
-import com.lastnyam.lastnyam_server.global.auth.JsonAccessDeniedHandler;
-import com.lastnyam.lastnyam_server.global.auth.JsonAuthenticationEntryPoint;
+import com.lastnyam.lastnyam_server.global.auth.handler.JsonAccessDeniedHandler;
+import com.lastnyam.lastnyam_server.global.auth.handler.JsonAuthenticationEntryPoint;
 import com.lastnyam.lastnyam_server.global.auth.jwt.JwtAuthenticationFilter;
 import com.lastnyam.lastnyam_server.global.auth.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;

@@ -15,13 +15,12 @@ public enum ExceptionCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "A001", "권한 없음"),
     UN_AUTHENTICATION(HttpStatus.UNAUTHORIZED, "A002", "인증 정보가 존재하지 않음"),
 
-    // user
+    // user & owner
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "사용자를 찾을 수 없음"),
     DUPLICATED_PHONE_NUMBER(HttpStatus.CONFLICT, "U002", "휴대폰 번호 중복"),
     DUPLICATED_NICKNAME(HttpStatus.CONFLICT, "U003", "닉네임 중복"),
-    PASSWORD_INVALID(HttpStatus.BAD_REQUEST, "U004", "비밀번호가 일치하지 않음"),
-
-    ;
+    PASSWORD_INVALID(HttpStatus.BAD_REQUEST, "U004", "비밀번호 불일치"),
+    DUPLICATED_BUSINESS_NUMBER(HttpStatus.CONFLICT, "U005", "사업자등록번호 중복");
 
     private final HttpStatus status;
     private final String code;

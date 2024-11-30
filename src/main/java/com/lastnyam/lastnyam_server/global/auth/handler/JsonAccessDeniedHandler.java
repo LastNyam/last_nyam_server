@@ -1,4 +1,4 @@
-package com.lastnyam.lastnyam_server.global.auth;
+package com.lastnyam.lastnyam_server.global.auth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;

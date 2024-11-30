@@ -1,6 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.user.controller;
 
-import com.lastnyam.lastnyam_server.domain.user.domain.UserPrincipal;
+import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.UpdateNicknameRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.LoginRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.SignupRequest;

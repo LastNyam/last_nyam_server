@@ -3,6 +3,7 @@ package com.lastnyam.lastnyam_server.domain.owner.domain;
 import com.lastnyam.lastnyam_server.domain.store.domain.Store;
 import com.lastnyam.lastnyam_server.global.auth.UserRole;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +20,7 @@ public class Owner {
     private Store store;
 
     @Column(nullable = false)
-    private String phone_number;
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String password;
@@ -27,4 +28,12 @@ public class Owner {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
+
+    @Builder
+    public Owner(Store store, String phoneNumber, String password) {
+        this.store = store;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.role = UserRole.ROLE_OWNER;
+    }
 }

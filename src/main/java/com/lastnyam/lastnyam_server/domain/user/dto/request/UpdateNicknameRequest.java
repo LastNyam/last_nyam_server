@@ -1,5 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.user.dto.request;
 
+import com.lastnyam.lastnyam_server.global.request.RequestRegex;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
