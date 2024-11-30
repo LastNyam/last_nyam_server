@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ResponseBody<Void>> handleNotFound(NoResourceFoundException e) {
         return ResponseEntity.status(ExceptionCode.INVALID_ENDPOINT.getStatus())
-                .body(ResponseUtil.createFailureResponse(ExceptionCode.INVALID_ENDPOINT, "잘못된 엔드포인트입니다."));
+                .body(ResponseUtil.createFailureResponse(ExceptionCode.INVALID_ENDPOINT));
     }
     
     @ExceptionHandler(Exception.class)
