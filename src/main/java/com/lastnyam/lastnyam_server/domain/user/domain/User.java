@@ -27,6 +27,7 @@ public class User extends AuditEntity {
     @Column(nullable = false)
     private String password;
 
+    @Setter
     @Lob
     private byte[] profileImage;
 
@@ -38,7 +39,7 @@ public class User extends AuditEntity {
     private UserRole role;
 
     @Builder
-    public User(String phoneNumber, String nickname, String password, boolean acceptsMarketing, UserRole role) {
+    public User(String phoneNumber, String nickname, String password, boolean acceptsMarketing) {
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
         this.password = password;

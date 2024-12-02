@@ -6,15 +6,21 @@ import com.lastnyam.lastnyam_server.domain.user.dto.request.LoginRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.SignupRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.CheckNicknameResponse;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.LoginResponse;
+import com.lastnyam.lastnyam_server.domain.user.dto.response.UserInfo;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.auth.jwt.TokenProvider;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -22,6 +28,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
+    @Transactional
     public void signup(SignupRequest request) {
         userRepository.findByPhoneNumber(request.getPhoneNumber())
                 .ifPresent(it -> {
@@ -78,5 +85,34 @@ public class UserService {
                 });
 
         savedUser.setNickname(request.getNickname());
+    }
+
+    @Transactional
+    public void updateProfileImage(Long userId, MultipartFile file) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        byte[] byteFile = null;
+        try {
+            byteFile = file.getBytes();
+        } catch (IOException e) {
+            log.error("profileImage upload error: {}", e.getMessage());
+            throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+        }
+
+        savedUser.setProfileImage(byteFile);
+    }
+
+
+    public UserInfo getMyInformation(Long userId) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        return UserInfo.builder()
+                .phoneNumber(savedUser.getPhoneNumber())
+                .nickname(savedUser.getNickname())
+                .acceptMarketing(savedUser.isAcceptsMarketing())
+                .profileImage(savedUser.getProfileImage())
+                .build();
     }
 }

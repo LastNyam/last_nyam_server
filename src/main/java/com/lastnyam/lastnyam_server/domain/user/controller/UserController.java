@@ -1,5 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.user.controller;
 
+import com.lastnyam.lastnyam_server.domain.user.dto.response.UserInfo;
 import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.UpdateNicknameRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.LoginRequest;
@@ -14,6 +15,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import static com.lastnyam.lastnyam_server.global.response.ResponseUtil.createSuccessResponse;
 
@@ -49,5 +53,22 @@ public class UserController {
     ) {
         userService.updateNickname(principal.getUserId(), request);
         return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @PostMapping("/profile-image")
+    public ResponseEntity<ResponseBody<Void>> updateProfileImage(
+            @RequestParam("file") MultipartFile file,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        userService.updateProfileImage(principal.getUserId(), file);
+        return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @GetMapping("/my-info")
+    public ResponseEntity<ResponseBody<UserInfo>> getMyInformation(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        UserInfo response = userService.getMyInformation(principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse(response));
     }
 }

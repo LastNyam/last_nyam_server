@@ -5,9 +5,11 @@ import com.lastnyam.lastnyam_server.global.response.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
@@ -29,10 +31,17 @@ public class GlobalExceptionHandler {
                 .body(ResponseUtil.createFailureResponse(ExceptionCode.BINDING_ERROR, customMessage));
     }
 
-    @ExceptionHandler(NoResourceFoundException.class)
+    @ExceptionHandler({NoResourceFoundException.class, HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<ResponseBody<Void>> handleNotFound(NoResourceFoundException e) {
         return ResponseEntity.status(ExceptionCode.INVALID_ENDPOINT.getStatus())
                 .body(ResponseUtil.createFailureResponse(ExceptionCode.INVALID_ENDPOINT));
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<ResponseBody<Void>> handleFile(NoResourceFoundException e) {
+        return ResponseEntity.status(ExceptionCode.INVALID_ENDPOINT.getStatus())
+                // TODO. 파일 실패 경우별로 세세하게
+                .body(ResponseUtil.createFailureResponse(ExceptionCode.FILE_IO_EXCEPTION));
     }
     
     @ExceptionHandler(Exception.class)
