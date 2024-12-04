@@ -17,6 +17,7 @@ public enum ExceptionCode {
     // auth
     FORBIDDEN(HttpStatus.FORBIDDEN, "A001", "권한 없음"),
     UN_AUTHENTICATION(HttpStatus.UNAUTHORIZED, "A002", "인증 정보가 존재하지 않음"),
+    CODE_EXPIRY(HttpStatus.UNAUTHORIZED, "A003", "인증번호가 만료되었거나 존재하지 않음"),
 
     // user & owner
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "사용자를 찾을 수 없음"),

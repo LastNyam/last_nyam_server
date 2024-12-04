@@ -68,6 +68,9 @@ public class CoolsmsService {
 
 	public Boolean checkCode(CheckCodeRequest request) {
 		String code = codeStorage.get(parsePhoneNumber(request.getPhoneNumber()));
+		if (code == null) {
+			throw new ServiceException(ExceptionCode.CODE_EXPIRY);
+		}
 		return request.getVerification().equals(code);
 	}
 }
