@@ -7,6 +7,7 @@ import com.lastnyam.lastnyam_server.global.auth.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,6 +34,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((auth) -> auth
+                        // TODO. 왜 안 먹히지..? 수정 필요
+                        .requestMatchers(HttpMethod.PATCH,"/api/user/auth/**").hasRole(USER)
 
                         // TODO. 요청별 권한 맞게 추가 후 기능 완료되면 막기
                         // .anyRequest().hasRole(ADMIN)

@@ -38,10 +38,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MultipartException.class)
-    public ResponseEntity<ResponseBody<Void>> handleFile(NoResourceFoundException e) {
+    public ResponseEntity<ResponseBody<Void>> handleFile(MultipartException e) {
+        log.error("File erroe: {}", e.getMessage());
         return ResponseEntity.status(ExceptionCode.INVALID_ENDPOINT.getStatus())
                 // TODO. 파일 실패 경우별로 세세하게
-                .body(ResponseUtil.createFailureResponse(ExceptionCode.FILE_IO_EXCEPTION));
+                .body(ResponseUtil.createFailureResponse(ExceptionCode.FILE_IO_EXCEPTION, e.getMessage()));
     }
     
     @ExceptionHandler(Exception.class)

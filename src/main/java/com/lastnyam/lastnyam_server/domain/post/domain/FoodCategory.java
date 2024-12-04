@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+// TODO. Enum 변경 등 리팩터링 필요할 듯,,,
+
 @Getter
 @NoArgsConstructor
 @Entity

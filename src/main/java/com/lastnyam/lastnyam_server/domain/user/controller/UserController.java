@@ -17,10 +17,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 import static com.lastnyam.lastnyam_server.global.response.ResponseUtil.createSuccessResponse;
-
 
 @Controller
 @RequestMapping("/api/user/auth")
@@ -63,6 +60,8 @@ public class UserController {
         userService.updateProfileImage(principal.getUserId(), file);
         return ResponseEntity.ok(createSuccessResponse());
     }
+
+    // TODO. 프로필 이미지 삭제
 
     @GetMapping("/my-info")
     public ResponseEntity<ResponseBody<UserInfo>> getMyInformation(
