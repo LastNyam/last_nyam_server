@@ -55,7 +55,7 @@ public class UserController {
         return ResponseEntity.ok(createSuccessResponse());
     }
 
-    @PostMapping("/profile-image")
+    @PatchMapping("/profile-image")
     public ResponseEntity<ResponseBody<Void>> updateProfileImage(
             @RequestParam("file") MultipartFile file,
             @AuthenticationPrincipal UserPrincipal principal

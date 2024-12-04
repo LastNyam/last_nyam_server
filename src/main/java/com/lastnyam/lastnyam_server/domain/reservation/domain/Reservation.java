@@ -26,6 +26,7 @@ public class Reservation {
     @Column(nullable = false)
     private int number;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private ReservationStatus status;
 }

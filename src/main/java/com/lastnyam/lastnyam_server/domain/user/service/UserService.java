@@ -1,5 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.user.service;
 
+import com.lastnyam.lastnyam_server.domain.reservation.repository.ReservationRepository;
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.UpdateNicknameRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.LoginRequest;
@@ -25,6 +26,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
@@ -108,11 +111,14 @@ public class UserService {
         User savedUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
 
+        int orderCount = reservationRepository.countByUserAndReceivedStatus(savedUser);
+
         return UserInfo.builder()
                 .phoneNumber(savedUser.getPhoneNumber())
                 .nickname(savedUser.getNickname())
                 .acceptMarketing(savedUser.isAcceptsMarketing())
                 .profileImage(savedUser.getProfileImage())
+                .orderCount(orderCount)
                 .build();
     }
 }

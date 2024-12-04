@@ -11,4 +11,5 @@ public class UserInfo {
     private String phoneNumber;
     private Boolean acceptMarketing;
     private byte[] profileImage;
+    private int orderCount;
 }
