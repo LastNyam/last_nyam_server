@@ -12,6 +12,7 @@ public enum ExceptionCode {
     BINDING_ERROR(HttpStatus.BAD_REQUEST, "C002", "바인딩시 에러 발생"),
     INVALID_ENDPOINT(HttpStatus.NOT_FOUND, "C003", "잘못된 주소 요청"),
     FILE_IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "C004", "파일 업로드 실패"),
+    SEND_MESSAGE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "C005", "메시지 전송 실패"),
 
     // auth
     FORBIDDEN(HttpStatus.FORBIDDEN, "A001", "권한 없음"),
