@@ -12,10 +12,12 @@ public enum ExceptionCode {
     BINDING_ERROR(HttpStatus.BAD_REQUEST, "C002", "바인딩시 에러 발생"),
     INVALID_ENDPOINT(HttpStatus.NOT_FOUND, "C003", "잘못된 주소 요청"),
     FILE_IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "C004", "파일 업로드 실패"),
+    SEND_MESSAGE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "C005", "메시지 전송 실패"),
 
     // auth
     FORBIDDEN(HttpStatus.FORBIDDEN, "A001", "권한 없음"),
     UN_AUTHENTICATION(HttpStatus.UNAUTHORIZED, "A002", "인증 정보가 존재하지 않음"),
+    CODE_EXPIRY(HttpStatus.UNAUTHORIZED, "A003", "인증번호가 만료되었거나 존재하지 않음"),
 
     // user & owner
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "사용자를 찾을 수 없음"),
