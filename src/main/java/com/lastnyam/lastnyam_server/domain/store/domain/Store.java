@@ -2,6 +2,7 @@ package com.lastnyam.lastnyam_server.domain.store.domain;
 
 import com.lastnyam.lastnyam_server.global.domain.AuditEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,4 +39,15 @@ public class Store extends AuditEntity {
     @Column(nullable = false)
     private String address;
 
+    @Builder
+    public Store(String name, String businessNumber, byte[] image, String positionX, String positionY, String contactNumber, String address) {
+        this.name = name;
+        this.businessNumber = businessNumber;
+        this.temperature = 36.5;
+        this.image = image;
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.contactNumber = contactNumber;
+        this.address = address;
+    }
 }
