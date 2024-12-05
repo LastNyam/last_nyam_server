@@ -2,6 +2,7 @@ package com.lastnyam.lastnyam_server.domain.post.domain;
 
 import com.lastnyam.lastnyam_server.domain.store.domain.Store;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,9 +18,11 @@ public class FoodPost {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private FoodCategory category;
 
     @Column(nullable = false)
@@ -42,4 +45,17 @@ public class FoodPost {
 
     @Lob
     private byte[] image;
+
+    @Builder
+    public FoodPost(Store store, FoodCategory category, String foodName, String content, int originPrice, int discountPrice, LocalDateTime endTime, int count, byte[] image) {
+        this.store = store;
+        this.category = category;
+        this.foodName = foodName;
+        this.content = content;
+        this.originPrice = originPrice;
+        this.discountPrice = discountPrice;
+        this.endTime = endTime;
+        this.count = count;
+        this.image = image;
+    }
 }

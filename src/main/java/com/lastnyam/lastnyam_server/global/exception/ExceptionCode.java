@@ -26,6 +26,12 @@ public enum ExceptionCode {
     PASSWORD_INVALID(HttpStatus.BAD_REQUEST, "U004", "비밀번호 불일치"),
     DUPLICATED_BUSINESS_NUMBER(HttpStatus.CONFLICT, "U005", "사업자등록번호 중복"),
 
+    // food
+    FOOD_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "F001", "존재하지 않는 음식 카테고리"),
+
+    // store
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "가게가 존재하지 않음"),
+
     ;
 
     private final HttpStatus status;

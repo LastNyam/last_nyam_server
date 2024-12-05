@@ -1,0 +1,22 @@
+package com.lastnyam.lastnyam_server.domain.post.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class PostInfo {
+    private Long storeId;
+    private String storeName;
+    private Long foodId;
+    private String foodCategory;
+    private String foodName;
+    private int originPrice;
+    private int discountPrice;
+    private LocalDateTime endTime;
+    private byte[] image;
+}
