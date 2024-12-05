@@ -44,7 +44,7 @@ public class CoolsmsService {
 			params.put("to", toPhoneNumber);
 			params.put("from", fromPhoneNumber);
 			params.put("type", "sms");
-			params.put("text", "인증번호는 [" + numStr + "] 입니다.");
+			params.put("text", "[lastnyam] 본인확인 인증번호는 [" + numStr + "] 입니다.");
 
 			coolsms.send(params);
 		} catch (Exception e) {
