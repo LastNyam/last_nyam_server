@@ -4,10 +4,13 @@ import com.lastnyam.lastnyam_server.domain.owner.domain.Owner;
 import com.lastnyam.lastnyam_server.domain.owner.repository.OwnerRepository;
 import com.lastnyam.lastnyam_server.domain.store.domain.Store;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.RegisterStoreRequest;
+import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.repository.StoreRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -52,6 +55,38 @@ public class StoreService {
 
         Store savedStore = storeRepository.save(newStore);
         savedOwner.setStore(savedStore);
+    }
+
+    @Transactional
+    public void updateStoreName(String storeName, Long userId) {
+        Owner savedUser = ownerRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        Store userStore = savedUser.getStore();
+
+        userStore.setName(storeName);
+    }
+
+    @Transactional
+    public void updateStoreAddress(UpdateStoreAddressRequest request, Long userId) {
+        Owner savedUser = ownerRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        Store userStore = savedUser.getStore();
+
+        userStore.setAddress(request.getAddress());
+        userStore.setPositionX(request.getPosX());
+        userStore.setPositionY(request.getPosY());
+    }
+
+    @Transactional
+    public void updateStoreContactNumber(String callNumber, Long userId) {
+        Owner savedUser = ownerRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        Store userStore = savedUser.getStore();
+
+        userStore.setContactNumber(callNumber);
     }
 
     @Transactional(readOnly = true)

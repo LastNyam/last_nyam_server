@@ -1,15 +1,20 @@
 package com.lastnyam.lastnyam_server.domain.store.controller;
 
 import com.lastnyam.lastnyam_server.domain.store.dto.request.RegisterStoreRequest;
+import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.service.StoreService;
 import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
 import com.lastnyam.lastnyam_server.global.response.ResponseBody;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import static com.lastnyam.lastnyam_server.global.response.ResponseUtil.createSuccessResponse;
 
@@ -28,7 +33,34 @@ public class StoreController {
         return ResponseEntity.ok(createSuccessResponse());
     }
 
-    // TODO. 가게 정보 수정
+    @PatchMapping("/owner/store/name")
+    public ResponseEntity<ResponseBody<Void>> updateStoreName(
+            @RequestBody @Valid Map<String, String> request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        storeService.updateStoreName(request.get("storeName"), principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @PatchMapping("/owner/store/address")
+    public ResponseEntity<ResponseBody<Void>> updateStoreAddress(
+            @RequestBody @Valid UpdateStoreAddressRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        storeService.updateStoreAddress(request, principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @PatchMapping("/owner/store/call-number")
+    public ResponseEntity<ResponseBody<Void>> updateStoreContactNumber(
+            @RequestBody @Valid Map<String, String> request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        storeService.updateStoreContactNumber(request.get("callNumber"), principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    // TODO. 영업시간 변경
 
     @GetMapping("/owner/store")
     public ResponseEntity<ResponseBody<StoreInfo>> getMyStoreInfo(

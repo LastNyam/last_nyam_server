@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -15,6 +16,7 @@ public class Store extends AuditEntity {
     @Column(name = "store_id")
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private String name;
 
@@ -24,18 +26,23 @@ public class Store extends AuditEntity {
     @Column(nullable = false)
     private double temperature;
 
+    @Setter
     @Lob
     private byte[] image;
 
-    // @Column(nullable = false)
+    @Setter
+    @Column(nullable = false)
     private String positionX;
 
-    // @Column(nullable = false)
+    @Setter
+    @Column(nullable = false)
     private String positionY;
 
+    @Setter
     @Column(nullable = false)
     private String contactNumber;
 
+    @Setter
     @Column(nullable = false)
     private String address;
 
