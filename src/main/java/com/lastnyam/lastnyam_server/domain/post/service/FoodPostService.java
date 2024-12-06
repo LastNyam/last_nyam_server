@@ -5,8 +5,10 @@ import com.lastnyam.lastnyam_server.domain.owner.repository.OwnerRepository;
 import com.lastnyam.lastnyam_server.domain.post.domain.*;
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UpdatePostStatusRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UploadFoodRequest;
+import com.lastnyam.lastnyam_server.domain.post.dto.response.PostDetailInfo;
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfo;
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfoWithPosition;
+import com.lastnyam.lastnyam_server.domain.post.dto.response.RecipeInfo;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodCategoryRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.RecommendRecipeRepository;
@@ -129,6 +131,39 @@ public class FoodPostService {
                 .filter(postStatus -> postStatus.name().equalsIgnoreCase(status))
                 .findFirst()
                 .orElseThrow(() -> new ServiceException(ExceptionCode.INVALID_POST_STATUS));
+    }
+
+    @Transactional(readOnly = true)
+    public PostDetailInfo getPostDetailInfo(Long foodId) {
+        FoodPost savedFoodPost = foodPostRepository.findById(foodId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.FOOD_POST_NOT_FOUND));
+
+        List<RecommendRecipe> recipes = recipeRepository.findAllByFoodPost(savedFoodPost);
+
+        return PostDetailInfo.builder()
+                .storeId(savedFoodPost.getStore().getId())
+                .storeName(savedFoodPost.getStore().getName())
+                .foodName(savedFoodPost.getFoodName())
+                .content(savedFoodPost.getContent())
+                .originPrice(savedFoodPost.getOriginPrice())
+                .discountPrice(savedFoodPost.getDiscountPrice())
+                .endTime(savedFoodPost.getEndTime())
+                .count(savedFoodPost.getCount())
+                .reservationTime(savedFoodPost.getReservationTimeLimit())
+                .status(savedFoodPost.getStatus())
+                .image(savedFoodPost.getImage())
+                .recommendRecipe(this.convertRecipeInfo(recipes))
+                .build();
+    }
+
+    private List<RecipeInfo> convertRecipeInfo(List<RecommendRecipe> recipes) {
+        return recipes.stream()
+                .map(recipe -> RecipeInfo.builder()
+                        .recipe(recipe.getRecipe())
+                        .recipeImage(recipe.getImage())
+                        .author(recipe.getAuthor())
+                        .build())
+                .toList();
     }
 
     public List<PostInfoWithPosition> getFoodPostList() {

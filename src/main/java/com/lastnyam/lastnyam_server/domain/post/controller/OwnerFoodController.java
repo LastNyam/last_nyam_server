@@ -2,6 +2,7 @@ package com.lastnyam.lastnyam_server.domain.post.controller;
 
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UpdatePostStatusRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UploadFoodRequest;
+import com.lastnyam.lastnyam_server.domain.post.dto.response.PostDetailInfo;
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfo;
 import com.lastnyam.lastnyam_server.domain.post.service.FoodPostService;
 import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
@@ -36,6 +37,12 @@ public class OwnerFoodController {
             @AuthenticationPrincipal UserPrincipal principal
     ) {
         List<PostInfo> response = foodPostService.getMyFoodPost(principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse(response));
+    }
+
+    @GetMapping("/{foodId}")
+    public ResponseEntity<ResponseBody<PostDetailInfo>> getPostDetailInfo(@PathVariable Long foodId) {
+        PostDetailInfo response = foodPostService.getPostDetailInfo(foodId);
         return ResponseEntity.ok(createSuccessResponse(response));
     }
 
