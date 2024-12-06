@@ -6,6 +6,7 @@ import com.lastnyam.lastnyam_server.domain.post.domain.*;
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UpdatePostStatusRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UploadFoodRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfo;
+import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfoWithPosition;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodCategoryRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.RecommendRecipeRepository;
@@ -39,7 +40,7 @@ public class FoodPostService {
         }
 
         byte[] recipeImage = null;
-        if (!request.getRecipeImage().isEmpty()) {
+        if (request.getRecipeImage() != null) {
             try {
                 recipeImage = request.getFoodImage().getBytes();
             } catch (IOException e) {
@@ -68,7 +69,7 @@ public class FoodPostService {
 
         FoodPost savedPost = foodPostRepository.save(newPost);
 
-        if (!request.getRecipe().isBlank()) {
+        if (request.getRecipe() != null) {
             RecommendRecipe recipe = RecommendRecipe.builder()
                     .foodPost(savedPost)
                     .recipe(request.getRecipe())
@@ -130,5 +131,16 @@ public class FoodPostService {
                 .filter(postStatus -> postStatus.name().equalsIgnoreCase(status))
                 .findFirst()
                 .orElseThrow(() -> new ServiceException(ExceptionCode.INVALID_POST_STATUS));
+    }
+
+    public List<PostInfoWithPosition> getFoodPostList() {
+        return foodPostRepository.findAll().stream()
+                .map(post -> PostInfoWithPosition.builder()
+
+
+
+
+                        .build())
+                .toList();
     }
 }
