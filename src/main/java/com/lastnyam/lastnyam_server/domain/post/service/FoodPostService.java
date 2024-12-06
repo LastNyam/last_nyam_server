@@ -2,14 +2,13 @@ package com.lastnyam.lastnyam_server.domain.post.service;
 
 import com.lastnyam.lastnyam_server.domain.owner.domain.Owner;
 import com.lastnyam.lastnyam_server.domain.owner.repository.OwnerRepository;
-import com.lastnyam.lastnyam_server.domain.post.domain.FoodCategory;
-import com.lastnyam.lastnyam_server.domain.post.domain.FoodPost;
-import com.lastnyam.lastnyam_server.domain.post.domain.PostStatus;
+import com.lastnyam.lastnyam_server.domain.post.domain.*;
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UpdatePostStatusRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UploadFoodRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfo;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodCategoryRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
+import com.lastnyam.lastnyam_server.domain.post.repository.RecommendRecipeRepository;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
@@ -28,14 +27,24 @@ public class FoodPostService {
     private final UserRepository userRepository;
     private final FoodPostRepository foodPostRepository;
     private final FoodCategoryRepository foodCategoryRepository;
+    private final RecommendRecipeRepository recipeRepository;
 
     @Transactional
     public void uploadFoodPost(UploadFoodRequest request, Long userId) {
-        byte[] image = null;
+        byte[] foodImage = null;
         try {
-            image = request.getImage().getBytes();
+            foodImage = request.getFoodImage().getBytes();
         } catch (IOException e) {
             throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+        }
+
+        byte[] recipeImage = null;
+        if (!request.getRecipeImage().isEmpty()) {
+            try {
+                recipeImage = request.getFoodImage().getBytes();
+            } catch (IOException e) {
+                throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+            }
         }
 
         Owner savedUser = ownerRepository.findById(userId)
@@ -53,11 +62,22 @@ public class FoodPostService {
                 .discountPrice(request.getDiscountPrice())
                 .endTime(request.getEndTime())
                 .count(request.getCount())
-                .image(image)
+                .image(foodImage)
                 .reservationTimeLimit(request.getReservationTime())
                 .build();
 
-        foodPostRepository.save(newPost);
+        FoodPost savedPost = foodPostRepository.save(newPost);
+
+        if (!request.getRecipe().isBlank()) {
+            RecommendRecipe recipe = RecommendRecipe.builder()
+                    .foodPost(savedPost)
+                    .recipe(request.getRecipe())
+                    .author(RecipeAuthor.OWNER)
+                    .image(recipeImage)
+                    .build();
+
+            recipeRepository.save(recipe);
+        }
 
         // TODO. 관심매장 알림
     }

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UploadFoodRequest {
+    // TODO. 검증
     private String foodCategory;
     private String foodName;
     private String content;
@@ -16,6 +17,8 @@ public class UploadFoodRequest {
     private int discountPrice;
     private LocalDateTime endTime;
     private int count;
-    private MultipartFile image;
     private int reservationTime;
+    private String recipe;
+    private MultipartFile recipeImage;
+    private MultipartFile foodImage;
 }

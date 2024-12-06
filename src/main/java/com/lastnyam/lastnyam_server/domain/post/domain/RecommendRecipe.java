@@ -1,6 +1,7 @@
 package com.lastnyam.lastnyam_server.domain.post.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,9 +19,6 @@ public class RecommendRecipe {
     private FoodPost foodPost;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
     private String recipe;
 
     @Column(nullable = false)
@@ -29,4 +27,12 @@ public class RecommendRecipe {
 
     @Lob
     private byte[] image;
+
+    @Builder
+    public RecommendRecipe(FoodPost foodPost, String recipe, RecipeAuthor author, byte[] image) {
+        this.foodPost = foodPost;
+        this.recipe = recipe;
+        this.author = author;
+        this.image = image;
+    }
 }
