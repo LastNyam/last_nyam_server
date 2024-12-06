@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -43,11 +44,20 @@ public class FoodPost {
     @Column(nullable = false)
     private int count;
 
+    @Column(nullable = false, columnDefinition = "LONGBLOB")
     @Lob
     private byte[] image;
 
+    @Column(nullable = false)
+    private int reservationTimeLimit;
+
+    @Setter
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PostStatus status;
+
     @Builder
-    public FoodPost(Store store, FoodCategory category, String foodName, String content, int originPrice, int discountPrice, LocalDateTime endTime, int count, byte[] image) {
+    public FoodPost(Store store, FoodCategory category, String foodName, String content, int originPrice, int discountPrice, LocalDateTime endTime, int count, byte[] image, int reservationTimeLimit) {
         this.store = store;
         this.category = category;
         this.foodName = foodName;
@@ -57,5 +67,7 @@ public class FoodPost {
         this.endTime = endTime;
         this.count = count;
         this.image = image;
+        this.reservationTimeLimit = reservationTimeLimit;
+        this.status = PostStatus.AVAILABLE;
     }
 }

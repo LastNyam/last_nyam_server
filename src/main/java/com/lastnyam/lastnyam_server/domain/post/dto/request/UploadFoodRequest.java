@@ -17,4 +17,5 @@ public class UploadFoodRequest {
     private LocalDateTime endTime;
     private int count;
     private MultipartFile image;
+    private int reservationTime;
 }

@@ -1,5 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.post.controller;
 
+import com.lastnyam.lastnyam_server.domain.post.dto.request.UpdatePostStatusRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.request.UploadFoodRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfo;
 import com.lastnyam.lastnyam_server.domain.post.service.OwnerFoodService;
@@ -9,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,4 +39,12 @@ public class OwnerFoodController {
         return ResponseEntity.ok(createSuccessResponse(response));
     }
 
+    @PatchMapping("/status")
+    public ResponseEntity<ResponseBody<Void>> updatePostStatus(
+            @RequestBody UpdatePostStatusRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        ownerFoodService.updatePostStatus(request, principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
 }

@@ -28,6 +28,8 @@ public enum ExceptionCode {
 
     // food
     FOOD_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "F001", "존재하지 않는 음식 카테고리"),
+    FOOD_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "F002", "존재하지 않는 상품"),
+    INVALID_POST_STATUS(HttpStatus.BAD_REQUEST, "F003", "잘못된 status (soldout or hide)"),
 
     // store
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "가게가 존재하지 않음"),
