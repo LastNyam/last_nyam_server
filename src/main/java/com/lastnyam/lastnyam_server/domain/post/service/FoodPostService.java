@@ -97,16 +97,14 @@ public class FoodPostService {
         return foodPosts.stream()
                 .map(post ->
                         PostInfo.builder()
-                                .storeId(post.getStore().getId())
-                                .storeName(post.getStore().getName())
                                 .foodId(post.getId())
                                 .foodCategory(post.getCategory().getName())
                                 .foodName(post.getFoodName())
                                 .originPrice(post.getOriginPrice())
                                 .discountPrice(post.getDiscountPrice())
                                 .endTime(post.getEndTime())
-                                .image(post.getImage())
                                 .status(post.getStatus())
+                                .image(post.getImage())
                                 .build()
                 ).toList();
     }

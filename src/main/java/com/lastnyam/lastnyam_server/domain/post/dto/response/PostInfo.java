@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class PostInfo {
-    private Long storeId;
-    private String storeName;
     private Long foodId;
     private String foodCategory;
     private String foodName;
