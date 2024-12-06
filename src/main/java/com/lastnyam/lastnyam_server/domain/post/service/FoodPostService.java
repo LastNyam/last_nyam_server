@@ -10,6 +10,7 @@ import com.lastnyam.lastnyam_server.domain.post.dto.request.UploadFoodRequest;
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfo;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodCategoryRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
+import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +23,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OwnerFoodService {
+public class FoodPostService {
     private final OwnerRepository ownerRepository;
+    private final UserRepository userRepository;
     private final FoodPostRepository foodPostRepository;
     private final FoodCategoryRepository foodCategoryRepository;
 
