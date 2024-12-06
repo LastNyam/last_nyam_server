@@ -166,13 +166,20 @@ public class FoodPostService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<PostInfoWithPosition> getFoodPostList() {
-        return foodPostRepository.findAll().stream()
+        return foodPostRepository.findAllByStatus(PostStatus.AVAILABLE).stream()
                 .map(post -> PostInfoWithPosition.builder()
-
-
-
-
+                        .foodId(post.getId())
+                        .foodCategory(post.getCategory().getName())
+                        .foodName(post.getFoodName())
+                        .originPrice(post.getOriginPrice())
+                        .discountPrice(post.getDiscountPrice())
+                        .endTime(post.getEndTime())
+                        .status(post.getStatus())
+                        .posX(post.getStore().getPositionX())
+                        .posY(post.getStore().getPositionY())
+                        .image(post.getImage())
                         .build())
                 .toList();
     }
