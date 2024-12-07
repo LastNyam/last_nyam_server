@@ -11,4 +11,5 @@ public class StoreInfo {
     private byte[] storeImage;
     private String callNumber;
     private String address;
+    private double temperature;
 }

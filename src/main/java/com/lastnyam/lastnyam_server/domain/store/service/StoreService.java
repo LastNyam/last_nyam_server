@@ -113,6 +113,7 @@ public class StoreService {
                 .storeImage(store.getImage())
                 .callNumber(store.getContactNumber())
                 .address(store.getAddress())
+                .temperature(store.getTemperature())
                 .build();
     }
 }
