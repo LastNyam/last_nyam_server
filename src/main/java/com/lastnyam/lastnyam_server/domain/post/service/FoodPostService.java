@@ -123,6 +123,7 @@ public class FoodPostService {
             throw new ServiceException(ExceptionCode.UN_AUTHENTICATION);
         }
 
+        savedFoodPost.setCount(0);
         savedFoodPost.setStatus(this.convertStatus(request.getStatus()));
     }
 

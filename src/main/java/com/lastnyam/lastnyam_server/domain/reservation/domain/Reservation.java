@@ -3,8 +3,11 @@ package com.lastnyam.lastnyam_server.domain.reservation.domain;
 import com.lastnyam.lastnyam_server.domain.post.domain.FoodPost;
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -29,4 +32,14 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReservationStatus status;
+
+    private LocalDateTime acceptTime;
+
+    @Builder
+    public Reservation(int number, FoodPost foodPost, User user) {
+        this.number = number;
+        this.foodPost = foodPost;
+        this.user = user;
+        this.status = ReservationStatus.BEFORE_ACCEPT;
+    }
 }
