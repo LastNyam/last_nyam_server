@@ -1,8 +1,10 @@
 package com.lastnyam.lastnyam_server.domain.sms.service;
 
 import com.lastnyam.lastnyam_server.domain.sms.dto.request.CheckCodeRequest;
+import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.api.Message;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CoolsmsService {
+	private final UserRepository userRepository;
 
 	@Value("${coolsms.api.key}")
 	private String apiKey;
@@ -28,9 +32,15 @@ public class CoolsmsService {
 	@Value("${coolsms.api.number}")
 	private String fromPhoneNumber;
 
-	private final Map<String, String> codeStorage = new ConcurrentHashMap<>();
+	private Map<String, String> codeStorage = new ConcurrentHashMap<>();
 
 	public void sendsms(String to) {
+		log.info("send sms request phoneNumber: {}", to);
+		userRepository.findByPhoneNumber(to)
+				.ifPresent(it -> {
+					throw new ServiceException(ExceptionCode.DUPLICATED_PHONE_NUMBER);
+				});
+
 		String numStr = generateRandomNumber();
 
 		String toPhoneNumber = parsePhoneNumber(to);
