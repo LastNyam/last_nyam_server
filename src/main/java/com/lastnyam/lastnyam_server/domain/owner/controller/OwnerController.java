@@ -21,9 +21,9 @@ public class OwnerController {
     private final OwnerService ownerService;
 
     @PostMapping("/signup")
-    public ResponseEntity<ResponseBody<Void>> signup(@RequestBody @Valid SignupRequest request) {
-        ownerService.signup(request);
-        return ResponseEntity.ok(createSuccessResponse());
+    public ResponseEntity<ResponseBody<LoginResponse>> signup(@RequestBody @Valid SignupRequest request) {
+        LoginResponse response = ownerService.signup(request);
+        return ResponseEntity.ok(createSuccessResponse(response));
     }
 
     @PostMapping("/login")

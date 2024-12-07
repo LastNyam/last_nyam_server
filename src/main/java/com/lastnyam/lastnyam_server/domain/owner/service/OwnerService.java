@@ -22,7 +22,7 @@ public class OwnerService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
-    public void signup(SignupRequest request) {
+    public LoginResponse signup(SignupRequest request) {
         ownerRepository.findByPhoneNumber(request.getPhoneNumber())
                 .ifPresent(it -> {
                     throw new ServiceException(ExceptionCode.DUPLICATED_PHONE_NUMBER);
@@ -34,7 +34,12 @@ public class OwnerService {
                 });
 
         Owner owner = this.convertToOwner(request);
-        ownerRepository.save(owner);
+        Owner savedUser = ownerRepository.save(owner);
+
+        String token = tokenProvider.createToken(savedUser.getId(), savedUser.getRole());
+        return LoginResponse.builder()
+                .token(token)
+                .build();
     }
 
     private Owner convertToOwner(SignupRequest request) {

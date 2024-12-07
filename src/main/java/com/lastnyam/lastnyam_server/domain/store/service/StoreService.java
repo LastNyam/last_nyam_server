@@ -30,17 +30,20 @@ public class StoreService {
         Owner savedOwner = ownerRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
 
-        storeRepository.findByBusinessNumber(request.getBusinessNumber())
-                .ifPresent(store -> {
-                    throw new ServiceException(ExceptionCode.DUPLICATED_BUSINESS_NUMBER);
-                });
+        // 테스트를 위해 중복 허용
+//        storeRepository.findByBusinessNumber(request.getBusinessNumber())
+//                .ifPresent(store -> {
+//                    throw new ServiceException(ExceptionCode.DUPLICATED_BUSINESS_NUMBER);
+//                });
 
         byte[] byteFile = null;
-        try {
-            byteFile = request.getStoreImage().getBytes();
-        } catch (IOException e) {
-            log.error("profileImage upload error: {}", e.getMessage());
-            throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+        if (request.getStoreImage() != null) {
+            try {
+                byteFile = request.getStoreImage().getBytes();
+            } catch (IOException e) {
+                log.error("profileImage upload error: {}", e.getMessage());
+                throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+            }
         }
 
         Store newStore = Store.builder()
@@ -110,6 +113,7 @@ public class StoreService {
                 .storeImage(store.getImage())
                 .callNumber(store.getContactNumber())
                 .address(store.getAddress())
+                .temperature(store.getTemperature())
                 .build();
     }
 }
