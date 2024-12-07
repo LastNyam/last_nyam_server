@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         // owner
                         .requestMatchers(HttpMethod.POST,
-                                "/api/owner/auth/sign-up", "/api/owner/auth/send-code/phone",
+                                "/api/owner/auth/signup", "/api/owner/auth/send-code/phone",
                                 "/api/owner/auth/check/phone", "/api/owner/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/owner/food/{foodId}").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/owner/**").hasRole(OWNER)
