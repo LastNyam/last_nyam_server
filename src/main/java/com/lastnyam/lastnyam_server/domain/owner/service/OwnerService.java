@@ -28,10 +28,10 @@ public class OwnerService {
                     throw new ServiceException(ExceptionCode.DUPLICATED_PHONE_NUMBER);
                 });
 
-        storeRepository.findByBusinessNumber(request.getBusinessNumber())
-                .ifPresent(it -> {
-                    throw new ServiceException(ExceptionCode.DUPLICATED_BUSINESS_NUMBER);
-                });
+//        storeRepository.findByBusinessNumber(request.getBusinessNumber())
+//                .ifPresent(it -> {
+//                    throw new ServiceException(ExceptionCode.DUPLICATED_BUSINESS_NUMBER);
+//                });
 
         Owner owner = this.convertToOwner(request);
         Owner savedUser = ownerRepository.save(owner);
