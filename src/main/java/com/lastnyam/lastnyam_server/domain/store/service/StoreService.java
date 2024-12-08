@@ -2,15 +2,24 @@ package com.lastnyam.lastnyam_server.domain.store.service;
 
 import com.lastnyam.lastnyam_server.domain.owner.domain.Owner;
 import com.lastnyam.lastnyam_server.domain.owner.repository.OwnerRepository;
+import com.lastnyam.lastnyam_server.domain.post.domain.FoodPost;
+import com.lastnyam.lastnyam_server.domain.post.domain.RecipeAuthor;
+import com.lastnyam.lastnyam_server.domain.post.domain.RecommendRecipe;
+import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
+import com.lastnyam.lastnyam_server.domain.post.repository.RecommendRecipeRepository;
+import com.lastnyam.lastnyam_server.domain.store.domain.RatingToTemperature;
+import com.lastnyam.lastnyam_server.domain.store.domain.Review;
 import com.lastnyam.lastnyam_server.domain.store.domain.Store;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.RegisterStoreRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressRequest;
+import com.lastnyam.lastnyam_server.domain.store.dto.request.UploadReviewRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
+import com.lastnyam.lastnyam_server.domain.store.repository.ReviewRepository;
 import com.lastnyam.lastnyam_server.domain.store.repository.StoreRepository;
+import com.lastnyam.lastnyam_server.domain.user.domain.User;
+import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +32,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class StoreService {
     private final OwnerRepository ownerRepository;
+    private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    private final ReviewRepository reviewRepository;
+    private final FoodPostRepository foodPostRepository;
+    private final RecommendRecipeRepository recommendRecipeRepository;
 
     @Transactional
     public void registerStore(RegisterStoreRequest request, Long userId) {
@@ -115,5 +128,44 @@ public class StoreService {
                 .address(store.getAddress())
                 .temperature(store.getTemperature())
                 .build();
+    }
+
+    @Transactional
+    public void uploadReview(UploadReviewRequest request, Long userId) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        Store savedStore = storeRepository.findById(request.getStoreId())
+                .orElseThrow(() -> new ServiceException(ExceptionCode.STORE_NOT_FOUND));
+
+        FoodPost savedFoodPost = foodPostRepository.findById(request.getFoodId())
+                .orElseThrow(() -> new ServiceException(ExceptionCode.FOOD_POST_NOT_FOUND));
+
+        // 리뷰 만들기, 가게 매너온도 변경
+        Review newReview = Review.builder()
+                .store(savedStore)
+                .user(savedUser)
+                .rating(request.getRating())
+                .content(request.getContent())
+                .build();
+
+        reviewRepository.save(newReview);
+
+        storeRepository.updateTemperature(savedStore.getId(), RatingToTemperature.getTemperature(request.getRating()));
+
+        // 레시피 만들기
+        if (!isNullOrEmpty(request.getRecipe())) {
+            RecommendRecipe newRecipe = RecommendRecipe.builder()
+                    .foodPost(savedFoodPost)
+                    .recipe(request.getRecipe())
+                    .author(RecipeAuthor.USER)
+                    .build();
+
+            recommendRecipeRepository.save(newRecipe);
+        }
+    }
+
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.trim().isEmpty();
     }
 }

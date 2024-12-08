@@ -2,6 +2,7 @@ package com.lastnyam.lastnyam_server.domain.store.domain;
 
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,12 @@ public class Review {
     private int rating;
 
     private String content;
+
+    @Builder
+    public Review(Store store, User user, int rating, String content) {
+        this.store = store;
+        this.user = user;
+        this.rating = rating;
+        this.content = content;
+    }
 }

@@ -2,12 +2,12 @@ package com.lastnyam.lastnyam_server.domain.store.controller;
 
 import com.lastnyam.lastnyam_server.domain.store.dto.request.RegisterStoreRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressRequest;
+import com.lastnyam.lastnyam_server.domain.store.dto.request.UploadReviewRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.service.StoreService;
 import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
 import com.lastnyam.lastnyam_server.global.response.ResponseBody;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -60,13 +60,20 @@ public class StoreController {
         return ResponseEntity.ok(createSuccessResponse());
     }
 
-    // TODO. 영업시간 변경
-
     @GetMapping("/owner/store")
     public ResponseEntity<ResponseBody<StoreInfo>> getMyStoreInfo(
             @AuthenticationPrincipal UserPrincipal principal
     ) {
         StoreInfo response = storeService.getMyStoreInfo(principal.getUserId());
         return ResponseEntity.ok(createSuccessResponse(response));
+    }
+
+    @PostMapping("/user/review")
+    public ResponseEntity<ResponseBody<Void>> uploadReview(
+            @RequestBody @Valid UploadReviewRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        storeService.uploadReview(request, principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
     }
 }

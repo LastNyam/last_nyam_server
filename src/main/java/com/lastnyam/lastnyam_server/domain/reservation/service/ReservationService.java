@@ -70,6 +70,7 @@ public class ReservationService {
                         .reservationId(r.getId())
                         .storeId(r.getFoodPost().getStore().getId())
                         .storeName(r.getFoodPost().getStore().getName())
+                        .foodId(r.getFoodPost().getId())
                         .foodImage(r.getFoodPost().getImage())
                         .status(r.getStatus())
                         .foodName(r.getFoodPost().getFoodName())

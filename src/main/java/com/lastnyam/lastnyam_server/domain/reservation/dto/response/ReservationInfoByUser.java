@@ -14,6 +14,7 @@ public class ReservationInfoByUser {
     private Long reservationId;
     private Long storeId;
     private String storeName;
+    private Long foodId;
     private byte[] foodImage;
     private ReservationStatus status;
     private String foodName;
