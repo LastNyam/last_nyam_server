@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -33,7 +34,11 @@ public class Reservation {
     @Column(nullable = false)
     private ReservationStatus status;
 
+    @Setter
     private LocalDateTime acceptTime;
+
+    @Setter
+    private String cancellationReason;
 
     @Builder
     public Reservation(int number, FoodPost foodPost, User user) {
