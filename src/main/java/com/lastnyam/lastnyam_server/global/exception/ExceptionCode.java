@@ -35,6 +35,10 @@ public enum ExceptionCode {
     // store
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "가게가 존재하지 않음"),
 
+    // reservation
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "예약이 존재하지 않음"),
+    CONCURRENT_UPDATE(HttpStatus.CONFLICT, "R002", "소비자가 이미 예약을 취소함"),
+
     ;
 
     private final HttpStatus status;

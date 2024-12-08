@@ -30,6 +30,7 @@ public class Reservation {
     @Column(nullable = false)
     private int number;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReservationStatus status;
@@ -39,6 +40,9 @@ public class Reservation {
 
     @Setter
     private String cancellationReason;
+
+    @Version
+    private int version;
 
     @Builder
     public Reservation(int number, FoodPost foodPost, User user) {
