@@ -31,9 +31,17 @@ public class GlobalExceptionHandler {
                 .body(ResponseUtil.createFailureResponse(ExceptionCode.BINDING_ERROR, customMessage));
     }
 
-    @ExceptionHandler({NoResourceFoundException.class, HttpRequestMethodNotSupportedException.class})
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ResponseBody<Void>> handleMethodNotSupported(HttpRequestMethodNotSupportedException e) {
+        return ResponseEntity
+                .status(ExceptionCode.METHOD_NOT_ALLOWED.getStatus())
+                .body(ResponseUtil.createFailureResponse(ExceptionCode.METHOD_NOT_ALLOWED));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ResponseBody<Void>> handleNotFound(NoResourceFoundException e) {
-        return ResponseEntity.status(ExceptionCode.INVALID_ENDPOINT.getStatus())
+        return ResponseEntity
+                .status(ExceptionCode.INVALID_ENDPOINT.getStatus())
                 .body(ResponseUtil.createFailureResponse(ExceptionCode.INVALID_ENDPOINT));
     }
 
