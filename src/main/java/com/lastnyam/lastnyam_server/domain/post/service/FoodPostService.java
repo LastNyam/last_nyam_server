@@ -13,9 +13,12 @@ import com.lastnyam.lastnyam_server.domain.post.repository.FoodCategoryRepositor
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.RecommendRecipeRepository;
 import com.lastnyam.lastnyam_server.domain.reservation.domain.ReservationStatus;
+import com.lastnyam.lastnyam_server.domain.reservation.repository.ReservationRepository;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ public class FoodPostService {
     private final FoodPostRepository foodPostRepository;
     private final FoodCategoryRepository foodCategoryRepository;
     private final RecommendRecipeRepository recipeRepository;
+    private final ReservationRepository reservationRepository;
 
     @Transactional
     public void uploadFoodPost(UploadFoodRequest request, Long userId) {
@@ -125,8 +129,29 @@ public class FoodPostService {
             throw new ServiceException(ExceptionCode.UN_AUTHENTICATION);
         }
 
-        savedFoodPost.setCount(0);
-        savedFoodPost.setStatus(this.convertStatus(request.getStatus()));
+        PostStatus postStatus = this.convertStatus(request.getStatus());
+        if (postStatus == PostStatus.SOLD_OUT) {
+            reservationRepository.findAllByFoodPostAndStatus(savedFoodPost, ReservationStatus.BEFORE_ACCEPT)
+                    .forEach(savedReservation -> {
+                        try {
+                            savedReservation.setStatus(ReservationStatus.CANCEL);
+                            savedReservation.setCancellationReason("상품 품절");
+                        } catch (OptimisticLockException | EntityNotFoundException ignored) {
+                        }
+                    });
+
+            savedFoodPost.setCount(0);
+        }
+
+        if (postStatus == PostStatus.HIDDEN) {
+            reservationRepository.findAllByFoodPostAndStatus(savedFoodPost, ReservationStatus.BEFORE_ACCEPT)
+                    .stream().findFirst()
+                    .ifPresent(it -> {
+                        throw new ServiceException(ExceptionCode.FOOD_POST_RESERVATION_EXISTS);
+                    });
+        }
+
+        savedFoodPost.setStatus(postStatus);
     }
 
     private PostStatus convertStatus(String status) {

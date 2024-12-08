@@ -1,5 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.reservation.repository;
 
+import com.lastnyam.lastnyam_server.domain.post.domain.FoodPost;
 import com.lastnyam.lastnyam_server.domain.reservation.domain.Reservation;
 import com.lastnyam.lastnyam_server.domain.reservation.domain.ReservationStatus;
 import com.lastnyam.lastnyam_server.domain.store.domain.Store;
@@ -15,6 +16,8 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     @Query("SELECT COUNT(r) FROM Reservation r WHERE r.user = :user AND r.status = RECEIVED")
     int countByUserAndReceivedStatus(@Param("user") User user);
+
+    List<Reservation> findAllByFoodPostAndStatus(FoodPost savedFoodPost, ReservationStatus reservationStatus);
 
     List<Reservation> findAllByFoodPost_Store(Store store);
 }
