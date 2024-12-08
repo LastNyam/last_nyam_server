@@ -1,7 +1,8 @@
 package com.lastnyam.lastnyam_server.domain.reservation.controller;
 
-import com.lastnyam.lastnyam_server.domain.reservation.dto.response.ReservationInfo;
+import com.lastnyam.lastnyam_server.domain.reservation.dto.response.ReservationInfoByOwner;
 import com.lastnyam.lastnyam_server.domain.reservation.dto.request.ReservationRequest;
+import com.lastnyam.lastnyam_server.domain.reservation.dto.response.ReservationInfoByUser;
 import com.lastnyam.lastnyam_server.domain.reservation.service.ReservationService;
 import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
 import com.lastnyam.lastnyam_server.global.response.ResponseBody;
@@ -32,11 +33,19 @@ public class ReservationController {
         return ResponseEntity.ok(createSuccessResponse());
     }
 
-    @GetMapping("/owner/reservation")
-    public ResponseEntity<ResponseBody<List<ReservationInfo>>> getReservationList(
+    @GetMapping("/user/reservation")
+    public ResponseEntity<ResponseBody<List<ReservationInfoByUser>>> getReservationListByUser(
             @AuthenticationPrincipal UserPrincipal principal
     ) {
-        List<ReservationInfo> response = reservationService.getReservationList(principal.getUserId());
+        List<ReservationInfoByUser> response = reservationService.getReservationListByUser(principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse(response));
+    }
+
+    @GetMapping("/owner/reservation")
+    public ResponseEntity<ResponseBody<List<ReservationInfoByOwner>>> getReservationListByOwner(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        List<ReservationInfoByOwner> response = reservationService.getReservationListByOwner(principal.getUserId());
         return ResponseEntity.ok(createSuccessResponse(response));
     }
 

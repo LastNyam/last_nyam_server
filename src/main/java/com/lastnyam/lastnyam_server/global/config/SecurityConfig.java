@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/api/user/auth/signup", "/api/user/auth/send-code/phone",
                                 "/api/user/auth/check/phone", "/api/user/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/user/auth/my-info").hasRole(USER)
+                        .requestMatchers(HttpMethod.GET, "/api/user/auth/my-info", "/api/user/reservation").hasRole(USER)
                         .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/user/**").hasRole(USER)
                         .requestMatchers(HttpMethod.PATCH,"/api/user/**").hasRole(USER)

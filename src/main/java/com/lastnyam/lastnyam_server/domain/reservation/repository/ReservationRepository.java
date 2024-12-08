@@ -17,6 +17,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT COUNT(r) FROM Reservation r WHERE r.user = :user AND r.status = RECEIVED")
     int countByUserAndReceivedStatus(@Param("user") User user);
 
+    List<Reservation> findAllByUser(User savedUser);
+
     List<Reservation> findAllByFoodPostAndStatus(FoodPost savedFoodPost, ReservationStatus reservationStatus);
 
     List<Reservation> findAllByFoodPost_Store(Store store);

@@ -10,10 +10,11 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ReservationInfo {
+public class ReservationInfoByUser {
     private Long reservationId;
-    private String userNickname;
-    private byte[] userImage;
+    private Long storeId;
+    private String storeName;
+    private byte[] foodImage;
     private ReservationStatus status;
     private String foodName;
     private int number;

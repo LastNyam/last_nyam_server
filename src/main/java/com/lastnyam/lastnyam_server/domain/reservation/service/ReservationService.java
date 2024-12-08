@@ -7,7 +7,8 @@ import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
 import com.lastnyam.lastnyam_server.domain.reservation.domain.Reservation;
 import com.lastnyam.lastnyam_server.domain.reservation.domain.ReservationStatus;
 import com.lastnyam.lastnyam_server.domain.reservation.dto.request.ReservationRequest;
-import com.lastnyam.lastnyam_server.domain.reservation.dto.response.ReservationInfo;
+import com.lastnyam.lastnyam_server.domain.reservation.dto.response.ReservationInfoByOwner;
+import com.lastnyam.lastnyam_server.domain.reservation.dto.response.ReservationInfoByUser;
 import com.lastnyam.lastnyam_server.domain.reservation.repository.ReservationRepository;
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
@@ -58,14 +59,37 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReservationInfo> getReservationList(Long userId) {
+    public List<ReservationInfoByUser> getReservationListByUser(Long userId) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        List<Reservation> reservations = reservationRepository.findAllByUser(savedUser);
+
+        return reservations.stream()
+                .map(r -> ReservationInfoByUser.builder()
+                        .reservationId(r.getId())
+                        .storeId(r.getFoodPost().getStore().getId())
+                        .storeName(r.getFoodPost().getStore().getName())
+                        .foodImage(r.getFoodPost().getImage())
+                        .status(r.getStatus())
+                        .foodName(r.getFoodPost().getFoodName())
+                        .number(r.getNumber())
+                        .price(r.getNumber()*r.getFoodPost().getDiscountPrice())
+                        .reservationDate(r.getAcceptTime())
+                        .build())
+                .toList();
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationInfoByOwner> getReservationListByOwner(Long userId) {
         Owner savedUser = ownerRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
 
         List<Reservation> reservations = reservationRepository.findAllByFoodPost_Store(savedUser.getStore());
 
         return reservations.stream()
-                .map(r -> ReservationInfo.builder()
+                .map(r -> ReservationInfoByOwner.builder()
                         .reservationId(r.getId())
                         .userNickname(r.getUser().getNickname())
                         .userImage(r.getUser().getProfileImage())
