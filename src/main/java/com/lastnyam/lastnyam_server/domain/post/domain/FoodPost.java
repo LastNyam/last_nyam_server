@@ -41,6 +41,7 @@ public class FoodPost {
     @Column(nullable = false)
     private LocalDateTime endTime;
 
+    @Setter
     @Column(nullable = false)
     private int count;
 

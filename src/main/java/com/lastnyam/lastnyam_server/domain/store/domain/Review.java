@@ -1,5 +1,6 @@
-package com.lastnyam.lastnyam_server.domain.reservation.domain;
+package com.lastnyam.lastnyam_server.domain.store.domain;
 
+import com.lastnyam.lastnyam_server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,11 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Reservation reservation;
+    private Store store;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private int rating;

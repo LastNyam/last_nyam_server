@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private static final String ADMIN = "ADMIN";
     private static final String USER = "USER";
+    private static final String OWNER = "OWNER";
 
     private final JsonAuthenticationEntryPoint jsonAuthenticationEntryPoint;
     private final JsonAccessDeniedHandler jsonAccessDeniedHandler;
@@ -34,12 +35,30 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((auth) -> auth
-                        // TODO. 왜 안 먹히지..? 수정 필요
-                        .requestMatchers(HttpMethod.PATCH,"/api/user/auth/**").hasRole(USER)
+                        // owner
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/owner/auth/signup", "/api/owner/auth/send-code/phone",
+                                "/api/owner/auth/check/phone", "/api/owner/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/owner/food/{foodId}").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/owner/**").hasRole(OWNER)
+                        .requestMatchers(HttpMethod.POST, "/api/owner/**").hasRole(OWNER)
+                        .requestMatchers(HttpMethod.PATCH,"/api/owner/**").hasRole(OWNER)
+                        .requestMatchers(HttpMethod.DELETE,"/api/owner/**").hasRole(OWNER)
 
-                        // TODO. 요청별 권한 맞게 추가 후 기능 완료되면 막기
-                        // .anyRequest().hasRole(ADMIN)
-                        .anyRequest().permitAll()
+                        // user
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/user/auth/signup", "/api/user/auth/send-code/phone",
+                                "/api/user/auth/check/phone", "/api/user/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/user/auth/my-info").hasRole(USER)
+                        .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/user/**").hasRole(USER)
+                        .requestMatchers(HttpMethod.PATCH,"/api/user/**").hasRole(USER)
+                        .requestMatchers(HttpMethod.PUT,"/api/user/**").hasRole(USER)
+                        .requestMatchers(HttpMethod.PATCH,"/api/user/**").hasRole(USER)
+                        .requestMatchers(HttpMethod.DELETE, "api/user/**").hasRole(USER)
+
+                        // admin
+                        .anyRequest().hasRole(ADMIN)
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> e

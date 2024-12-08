@@ -12,14 +12,19 @@ import com.lastnyam.lastnyam_server.domain.post.dto.response.RecipeInfo;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodCategoryRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.RecommendRecipeRepository;
+import com.lastnyam.lastnyam_server.domain.reservation.domain.ReservationStatus;
+import com.lastnyam.lastnyam_server.domain.reservation.repository.ReservationRepository;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +36,7 @@ public class FoodPostService {
     private final FoodPostRepository foodPostRepository;
     private final FoodCategoryRepository foodCategoryRepository;
     private final RecommendRecipeRepository recipeRepository;
+    private final ReservationRepository reservationRepository;
 
     @Transactional
     public void uploadFoodPost(UploadFoodRequest request, Long userId) {
@@ -90,7 +96,7 @@ public class FoodPostService {
         Owner savedUser = ownerRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
 
-        List<FoodPost> foodPosts = foodPostRepository.findAllByStore(savedUser.getStore());
+        List<FoodPost> foodPosts = foodPostRepository.findAllByStoreAndStatusNot(savedUser.getStore(), PostStatus.DELETED);
 
         return this.convertPostInfo(foodPosts);
     }
@@ -123,7 +129,29 @@ public class FoodPostService {
             throw new ServiceException(ExceptionCode.UN_AUTHENTICATION);
         }
 
-        savedFoodPost.setStatus(this.convertStatus(request.getStatus()));
+        PostStatus postStatus = this.convertStatus(request.getStatus());
+        if (postStatus == PostStatus.SOLD_OUT) {
+            reservationRepository.findAllByFoodPostAndStatus(savedFoodPost, ReservationStatus.BEFORE_ACCEPT)
+                    .forEach(savedReservation -> {
+                        try {
+                            savedReservation.setStatus(ReservationStatus.CANCEL);
+                            savedReservation.setCancellationReason("상품 품절");
+                        } catch (OptimisticLockException | EntityNotFoundException ignored) {
+                        }
+                    });
+
+            savedFoodPost.setCount(0);
+        }
+
+        if (postStatus == PostStatus.HIDDEN) {
+            reservationRepository.findAllByFoodPostAndStatus(savedFoodPost, ReservationStatus.BEFORE_ACCEPT)
+                    .stream().findFirst()
+                    .ifPresent(it -> {
+                        throw new ServiceException(ExceptionCode.FOOD_POST_RESERVATION_EXISTS);
+                    });
+        }
+
+        savedFoodPost.setStatus(postStatus);
     }
 
     private PostStatus convertStatus(String status) {
@@ -157,13 +185,31 @@ public class FoodPostService {
     }
 
     private List<RecipeInfo> convertRecipeInfo(List<RecommendRecipe> recipes) {
-        return recipes.stream()
-                .map(recipe -> RecipeInfo.builder()
-                        .recipe(recipe.getRecipe())
-                        .recipeImage(recipe.getImage())
-                        .author(recipe.getAuthor())
-                        .build())
-                .toList();
+        List<RecipeInfo> results = new ArrayList<>(2);
+
+        recipes.stream()
+                .filter(recipe -> recipe.getAuthor() == RecipeAuthor.OWNER)
+                .findFirst()
+                .ifPresent(recipe -> results.add(
+                        RecipeInfo.builder()
+                                .recipe(recipe.getRecipe())
+                                .recipeImage(recipe.getImage())
+                                .author(recipe.getAuthor())
+                                .build()
+                ));
+
+        recipes.stream()
+                .filter(recipe -> recipe.getAuthor() == RecipeAuthor.USER)
+                .findAny() // TODO. 테스트 필요
+                .ifPresent(recipe -> results.add(
+                        RecipeInfo.builder()
+                                .recipe(recipe.getRecipe())
+                                .recipeImage(recipe.getImage())
+                                .author(recipe.getAuthor())
+                                .build()
+                ));
+
+        return results;
     }
 
     @Transactional(readOnly = true)
@@ -176,7 +222,6 @@ public class FoodPostService {
                         .originPrice(post.getOriginPrice())
                         .discountPrice(post.getDiscountPrice())
                         .endTime(post.getEndTime())
-                        .status(post.getStatus())
                         .posX(post.getStore().getPositionX())
                         .posY(post.getStore().getPositionY())
                         .image(post.getImage())
