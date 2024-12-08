@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface FoodPostRepository extends JpaRepository<FoodPost, Long> {
 
-    List<FoodPost> findAllByStore(Store savedUser);
+    List<FoodPost> findAllByStoreAndStatusNot(Store savedUser, PostStatus status);
     List<FoodPost> findAllByStatus(PostStatus status);
 
     @Modifying
