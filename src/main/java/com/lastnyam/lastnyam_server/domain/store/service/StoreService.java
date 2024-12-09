@@ -227,7 +227,6 @@ public class StoreService {
         Store savedStore = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.STORE_NOT_FOUND));
 
-        // TODO. isLike 조회
         boolean isLike = false;
         if (principal != null) {
             Optional<User> user = userRepository.findById(principal.getUserId());

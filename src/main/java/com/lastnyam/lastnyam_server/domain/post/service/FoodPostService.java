@@ -203,7 +203,7 @@ public class FoodPostService {
 
         recipes.stream()
                 .filter(recipe -> recipe.getAuthor() == RecipeAuthor.USER)
-                .findAny() // TODO. 테스트 필요
+                .findAny()
                 .ifPresent(recipe -> results.add(
                         RecipeInfo.builder()
                                 .recipe(recipe.getRecipe())

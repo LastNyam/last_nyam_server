@@ -23,7 +23,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Component
 public class TokenProvider implements AuthenticationProvider {
-    // TODO. 만료 시간 30분으로 해둠. 필요 시 추후 변경
+    // 만료 시간 3시간으로 해둠. 필요 시 추후 변경
     private final long EXPIRATION_TIME = 3*60*60*1000L;
     private final LastnyamUserDetailsService userDetailsService;
 

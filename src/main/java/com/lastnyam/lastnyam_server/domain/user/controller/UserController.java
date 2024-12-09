@@ -61,8 +61,6 @@ public class UserController {
         return ResponseEntity.ok(createSuccessResponse());
     }
 
-    // TODO. 프로필 이미지 삭제
-
     @GetMapping("/my-info")
     public ResponseEntity<ResponseBody<UserInfo>> getMyInformation(
             @AuthenticationPrincipal UserPrincipal principal

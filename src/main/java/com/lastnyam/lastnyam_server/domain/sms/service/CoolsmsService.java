@@ -45,8 +45,8 @@ public class CoolsmsService {
 
 		String toPhoneNumber = parsePhoneNumber(to);
 		codeStorage.put(toPhoneNumber, numStr);
-		// TODO. 사용자가 한번 하고 또 보냈다면? 동시성 문제는?
-		Executors.newSingleThreadScheduledExecutor().schedule(() -> codeStorage.remove(toPhoneNumber), 5, TimeUnit.MINUTES);
+		// 사용자가 한번 하고 또 보냈다면? 동시성 문제 이슈로 일단 제거
+//		Executors.newSingleThreadScheduledExecutor().schedule(() -> codeStorage.remove(toPhoneNumber), 5, TimeUnit.MINUTES);
 
 		try {
 			Message coolsms = new Message(apiKey, apiSecret);
