@@ -17,12 +17,14 @@ import com.lastnyam.lastnyam_server.global.exception.ServiceException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
@@ -127,6 +129,7 @@ public class ReservationService {
 
     @Transactional
     public void reservationCancel(Long reservationId, String cancelMessage, Long userId) {
+        log.info("reservation cancel request(Owner): userId-{}, cancelMsg-{}", userId, cancelMessage);
         Owner savedUser = ownerRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
 
@@ -145,5 +148,26 @@ public class ReservationService {
         }
 
         // TODO. 사용자에 알림
+    }
+
+    @Transactional
+    public void reservationCancelByUser(Long reservationId, Long userId) {
+        log.info("reservation cancel request(User): userId-{}", userId);
+
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.RESERVATION_NOT_FOUND));
+
+        if (!reservation.getUser().equals(savedUser)) {
+            throw new ServiceException(ExceptionCode.UN_AUTHENTICATION);
+        }
+
+        int modifiedRow = reservationRepository.deleteByIdAndStatus(reservationId, ReservationStatus.BEFORE_ACCEPT);
+
+        if (modifiedRow == 0) {
+            throw new ServiceException(ExceptionCode.CONCURRENT_UPDATE_OWNER);
+        }
     }
 }

@@ -67,4 +67,13 @@ public class ReservationController {
         reservationService.reservationCancel(reservationId, request.get("cancelMessage"), principal.getUserId());
         return ResponseEntity.ok(createSuccessResponse());
     }
+
+    @PostMapping("/user/reservation/{reservationId}/cancel")
+    public ResponseEntity<ResponseBody<Void>> reservationCancelByUser(
+            @PathVariable Long reservationId,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        reservationService.reservationCancelByUser(reservationId, principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
 }

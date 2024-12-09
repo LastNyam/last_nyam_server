@@ -6,6 +6,7 @@ import com.lastnyam.lastnyam_server.domain.reservation.domain.ReservationStatus;
 import com.lastnyam.lastnyam_server.domain.store.domain.Store;
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -22,4 +23,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllByFoodPostAndStatus(FoodPost savedFoodPost, ReservationStatus reservationStatus);
 
     List<Reservation> findAllByFoodPost_Store(Store store);
+
+    @Modifying
+    @Query("DELETE FROM Reservation r WHERE r.id = :reservationId AND r.status = :status")
+    int deleteByIdAndStatus(@Param("reservationId") Long reservationId, @Param("status") ReservationStatus status);
 }

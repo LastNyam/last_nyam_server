@@ -40,6 +40,7 @@ public enum ExceptionCode {
     // reservation
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "예약이 존재하지 않음"),
     CONCURRENT_UPDATE(HttpStatus.CONFLICT, "R002", "소비자가 이미 예약을 취소함"),
+    CONCURRENT_UPDATE_OWNER(HttpStatus.CONFLICT, "R003", "업주가 이미 예약을 수락했거나 취소함"),
 
     ;
 
