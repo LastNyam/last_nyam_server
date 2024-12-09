@@ -14,11 +14,13 @@ import java.util.List;
 @Repository
 public interface FoodPostRepository extends JpaRepository<FoodPost, Long> {
 
-    List<FoodPost> findAllByStoreAndStatusNot(Store savedUser, PostStatus status);
+    List<FoodPost> findAllByStoreAndStatusNot(Store store, PostStatus status);
     List<FoodPost> findAllByStatus(PostStatus status);
 
     @Modifying
     @Query("UPDATE FoodPost f SET f.count = f.count - :amount " +
             "WHERE f.id = :id AND f.count >= :amount AND f.status = 'AVAILABLE'")
     int decreaseStock(@Param("id") Long id, @Param("amount") int amount);
+
+    List<FoodPost> findAllByStoreAndStatus(Store store, PostStatus status);
 }

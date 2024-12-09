@@ -1,6 +1,7 @@
 package com.lastnyam.lastnyam_server.domain.post.controller;
 
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostDetailInfo;
+import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfo;
 import com.lastnyam.lastnyam_server.domain.post.dto.response.PostInfoWithPosition;
 import com.lastnyam.lastnyam_server.domain.post.service.FoodPostService;
 import com.lastnyam.lastnyam_server.global.response.ResponseBody;
@@ -30,6 +31,12 @@ public class UserFoodController {
     @GetMapping("/{foodId}")
     public ResponseEntity<ResponseBody<PostDetailInfo>> getPostDetailInfo(@PathVariable Long foodId) {
         PostDetailInfo response = foodPostService.getPostDetailInfo(foodId);
+        return ResponseEntity.ok(createSuccessResponse(response));
+    }
+
+    @GetMapping("/store/{storeId}")
+    public ResponseEntity<ResponseBody<List<PostInfo>>> getPostInfoByStore(@PathVariable Long storeId) {
+        List<PostInfo> response = foodPostService.getPostInfoByStore(storeId);
         return ResponseEntity.ok(createSuccessResponse(response));
     }
 }

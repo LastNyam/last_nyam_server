@@ -14,6 +14,8 @@ import com.lastnyam.lastnyam_server.domain.post.repository.FoodPostRepository;
 import com.lastnyam.lastnyam_server.domain.post.repository.RecommendRecipeRepository;
 import com.lastnyam.lastnyam_server.domain.reservation.domain.ReservationStatus;
 import com.lastnyam.lastnyam_server.domain.reservation.repository.ReservationRepository;
+import com.lastnyam.lastnyam_server.domain.store.domain.Store;
+import com.lastnyam.lastnyam_server.domain.store.repository.StoreRepository;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
@@ -37,6 +39,7 @@ public class FoodPostService {
     private final FoodCategoryRepository foodCategoryRepository;
     private final RecommendRecipeRepository recipeRepository;
     private final ReservationRepository reservationRepository;
+    private final StoreRepository storeRepository;
 
     @Transactional
     public void uploadFoodPost(UploadFoodRequest request, Long userId) {
@@ -227,5 +230,25 @@ public class FoodPostService {
                         .image(post.getImage())
                         .build())
                 .toList();
+    }
+
+    public List<PostInfo> getPostInfoByStore(Long storeId) {
+        Store savedStore = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.STORE_NOT_FOUND));
+
+        List<FoodPost> foodPosts = foodPostRepository.findAllByStoreAndStatus(savedStore, PostStatus.AVAILABLE);
+
+        return foodPosts.stream()
+                .map(post -> PostInfo.builder()
+                        .foodId(post.getId())
+                        .foodCategory(post.getCategory().getName())
+                        .foodName(post.getFoodName())
+                        .originPrice(post.getOriginPrice())
+                        .discountPrice(post.getDiscountPrice())
+                        .endTime(post.getEndTime())
+                        .status(post.getStatus())
+                        .image(post.getImage())
+                        .build()
+                ).toList();
     }
 }
