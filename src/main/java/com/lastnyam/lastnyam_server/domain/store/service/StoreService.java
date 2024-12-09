@@ -15,6 +15,7 @@ import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressR
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UploadReviewRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.ReviewInfo;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
+import com.lastnyam.lastnyam_server.domain.store.dto.response.StorePositionInfo;
 import com.lastnyam.lastnyam_server.domain.store.repository.ReviewRepository;
 import com.lastnyam.lastnyam_server.domain.store.repository.StoreRepository;
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
@@ -185,5 +186,18 @@ public class StoreService {
                         .content(review.getContent())
                         .build())
                 .toList();
+    }
+
+    public List<StorePositionInfo> getStoreList() {
+        List<Store> stores = storeRepository.findAll();
+
+        return stores.stream()
+                .map(store -> StorePositionInfo.builder()
+                        .storeId(store.getId())
+                        .storeName(store.getName())
+                        .posX(store.getPositionX())
+                        .posY(store.getPositionY())
+                        .build()
+                ).toList();
     }
 }

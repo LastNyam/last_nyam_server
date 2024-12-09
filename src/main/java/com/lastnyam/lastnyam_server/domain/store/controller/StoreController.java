@@ -5,6 +5,7 @@ import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressR
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UploadReviewRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.ReviewInfo;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
+import com.lastnyam.lastnyam_server.domain.store.dto.response.StorePositionInfo;
 import com.lastnyam.lastnyam_server.domain.store.service.StoreService;
 import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
 import com.lastnyam.lastnyam_server.global.response.ResponseBody;
@@ -84,6 +85,12 @@ public class StoreController {
             @AuthenticationPrincipal UserPrincipal principal
     ) {
         List<ReviewInfo> response = storeService.getReviewList(principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse(response));
+    }
+
+    @GetMapping("/user/store")
+    public ResponseEntity<ResponseBody<List<StorePositionInfo>>> getStoreList() {
+        List<StorePositionInfo> response = storeService.getStoreList();
         return ResponseEntity.ok(createSuccessResponse(response));
     }
 }
