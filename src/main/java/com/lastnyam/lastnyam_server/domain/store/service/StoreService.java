@@ -13,6 +13,7 @@ import com.lastnyam.lastnyam_server.domain.store.domain.Store;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.RegisterStoreRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UploadReviewRequest;
+import com.lastnyam.lastnyam_server.domain.store.dto.response.ReviewInfo;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.repository.ReviewRepository;
 import com.lastnyam.lastnyam_server.domain.store.repository.StoreRepository;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -167,5 +169,21 @@ public class StoreService {
 
     private boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewInfo> getReviewList(Long userId) {
+        Owner savedOwner = ownerRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        List<Review> reviews = reviewRepository.findAllByStore(savedOwner.getStore());
+
+        return reviews.stream()
+                .map(review -> ReviewInfo.builder()
+                        .userNickname(review.getUser().getNickname())
+                        .rating(review.getRating())
+                        .content(review.getContent())
+                        .build())
+                .toList();
     }
 }

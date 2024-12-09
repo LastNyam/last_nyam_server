@@ -3,6 +3,7 @@ package com.lastnyam.lastnyam_server.domain.store.controller;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.RegisterStoreRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UploadReviewRequest;
+import com.lastnyam.lastnyam_server.domain.store.dto.response.ReviewInfo;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.service.StoreService;
 import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
@@ -14,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.lastnyam.lastnyam_server.global.response.ResponseUtil.createSuccessResponse;
@@ -75,5 +77,13 @@ public class StoreController {
     ) {
         storeService.uploadReview(request, principal.getUserId());
         return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @GetMapping("/owner/review")
+    public ResponseEntity<ResponseBody<List<ReviewInfo>>> getReviewList(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        List<ReviewInfo> response = storeService.getReviewList(principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse(response));
     }
 }
