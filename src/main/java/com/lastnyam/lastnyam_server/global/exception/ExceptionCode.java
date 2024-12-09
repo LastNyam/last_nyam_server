@@ -36,6 +36,8 @@ public enum ExceptionCode {
 
     // store
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "가게가 존재하지 않음"),
+    LIKE_STORE_EXISTS(HttpStatus.CONFLICT, "S002", "이미 관심매장으로 등록됨"),
+    LIKE_STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "S003", "관심매장으로 등록되지 않음"),
 
     // reservation
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "예약이 존재하지 않음"),

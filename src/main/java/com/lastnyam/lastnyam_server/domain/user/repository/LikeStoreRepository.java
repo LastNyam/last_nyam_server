@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface LikeStoreRepository  extends JpaRepository<LikeStore, Long> {
 
-    Optional<Object> findByUserAndStore(User user, Store savedStore);
+    Optional<LikeStore> findByUserAndStore(User user, Store savedStore);
 }

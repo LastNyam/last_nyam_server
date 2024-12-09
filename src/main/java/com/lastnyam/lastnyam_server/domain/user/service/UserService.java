@@ -1,6 +1,9 @@
 package com.lastnyam.lastnyam_server.domain.user.service;
 
 import com.lastnyam.lastnyam_server.domain.reservation.repository.ReservationRepository;
+import com.lastnyam.lastnyam_server.domain.store.domain.Store;
+import com.lastnyam.lastnyam_server.domain.store.repository.StoreRepository;
+import com.lastnyam.lastnyam_server.domain.user.domain.LikeStore;
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.UpdateNicknameRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.LoginRequest;
@@ -8,6 +11,7 @@ import com.lastnyam.lastnyam_server.domain.user.dto.request.SignupRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.CheckNicknameResponse;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.LoginResponse;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.UserInfo;
+import com.lastnyam.lastnyam_server.domain.user.repository.LikeStoreRepository;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.auth.jwt.TokenProvider;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
@@ -27,6 +31,8 @@ import java.io.IOException;
 public class UserService {
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+    private final StoreRepository storeRepository;
+    private final LikeStoreRepository likeStoreRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
@@ -120,5 +126,40 @@ public class UserService {
                 .profileImage(savedUser.getProfileImage())
                 .orderCount(orderCount)
                 .build();
+    }
+
+    @Transactional
+    public void likeStore(Long storeId, Long userId) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        Store savedStore = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.STORE_NOT_FOUND));
+
+        likeStoreRepository.findByUserAndStore(savedUser, savedStore)
+                .ifPresent(it -> {
+                    throw new ServiceException(ExceptionCode.LIKE_STORE_EXISTS);
+                });
+
+        LikeStore likeStore = LikeStore.builder()
+                .store(savedStore)
+                .user(savedUser)
+                .build();
+
+        likeStoreRepository.save(likeStore);
+    }
+
+    @Transactional
+    public void unlikeStore(Long storeId, Long userId) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        Store savedStore = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.STORE_NOT_FOUND));
+
+        LikeStore likeStore = likeStoreRepository.findByUserAndStore(savedUser, savedStore)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.LIKE_STORE_NOT_FOUND));
+
+        likeStoreRepository.delete(likeStore);
     }
 }

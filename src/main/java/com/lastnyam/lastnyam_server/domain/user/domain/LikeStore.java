@@ -2,6 +2,7 @@ package com.lastnyam.lastnyam_server.domain.user.domain;
 
 import com.lastnyam.lastnyam_server.domain.store.domain.Store;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,11 @@ public class LikeStore {
 
     @Column(nullable = false)
     private boolean notification;
+
+    @Builder
+    public LikeStore(User user, Store store) {
+        this.user = user;
+        this.store = store;
+        this.notification = true;
+    }
 }
