@@ -15,7 +15,6 @@ public class PostInfoWithPosition {
     private int originPrice;
     private int discountPrice;
     private LocalDateTime endTime;
-    private PostStatus status;
     private String posX;
     private String posY;
     private byte[] image;
