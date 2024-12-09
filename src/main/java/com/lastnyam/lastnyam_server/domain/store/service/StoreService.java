@@ -14,12 +14,15 @@ import com.lastnyam.lastnyam_server.domain.store.dto.request.RegisterStoreReques
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UploadReviewRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.ReviewInfo;
+import com.lastnyam.lastnyam_server.domain.store.dto.response.MyPageStoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StorePositionInfo;
 import com.lastnyam.lastnyam_server.domain.store.repository.ReviewRepository;
 import com.lastnyam.lastnyam_server.domain.store.repository.StoreRepository;
 import com.lastnyam.lastnyam_server.domain.user.domain.User;
+import com.lastnyam.lastnyam_server.domain.user.repository.LikeStoreRepository;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
+import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -40,6 +44,7 @@ public class StoreService {
     private final ReviewRepository reviewRepository;
     private final FoodPostRepository foodPostRepository;
     private final RecommendRecipeRepository recommendRecipeRepository;
+    private final LikeStoreRepository likeStoreRepository;
 
     @Transactional
     public void registerStore(RegisterStoreRequest request, Long userId) {
@@ -109,7 +114,7 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public StoreInfo getMyStoreInfo(Long userId) {
+    public MyPageStoreInfo getMyStoreInfo(Long userId) {
         Owner savedUser = ownerRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
 
@@ -122,8 +127,8 @@ public class StoreService {
         return this.convertStoreInfo(myStore);
     }
 
-    private StoreInfo convertStoreInfo(Store store) {
-        return StoreInfo.builder()
+    private MyPageStoreInfo convertStoreInfo(Store store) {
+        return MyPageStoreInfo.builder()
                 .storeId(store.getId())
                 .storeName(store.getName())
                 .storeImage(store.getImage())
@@ -199,5 +204,28 @@ public class StoreService {
                         .posY(store.getPositionY())
                         .build()
                 ).toList();
+    }
+
+    public StoreInfo getStoreInfo(Long storeId, UserPrincipal principal) {
+        Store savedStore = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.STORE_NOT_FOUND));
+
+        // TODO. isLike 조회
+        boolean isLike = false;
+        if (principal != null) {
+            Optional<User> user = userRepository.findById(principal.getUserId());
+            if (user.isPresent()) {
+                isLike = likeStoreRepository.findByUserAndStore(user.get(), savedStore).isPresent();
+            }
+        }
+
+        return StoreInfo.builder()
+                .storeName(savedStore.getName())
+                .address(savedStore.getAddress())
+                .callNumber(savedStore.getContactNumber())
+                .storeImage(savedStore.getImage())
+                .temperature(savedStore.getTemperature())
+                .like(isLike)
+                .build();
     }
 }

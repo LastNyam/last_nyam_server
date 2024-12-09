@@ -4,6 +4,7 @@ import com.lastnyam.lastnyam_server.domain.store.dto.request.RegisterStoreReques
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UpdateStoreAddressRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.request.UploadReviewRequest;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.ReviewInfo;
+import com.lastnyam.lastnyam_server.domain.store.dto.response.MyPageStoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StoreInfo;
 import com.lastnyam.lastnyam_server.domain.store.dto.response.StorePositionInfo;
 import com.lastnyam.lastnyam_server.domain.store.service.StoreService;
@@ -64,10 +65,10 @@ public class StoreController {
     }
 
     @GetMapping("/owner/store")
-    public ResponseEntity<ResponseBody<StoreInfo>> getMyStoreInfo(
+    public ResponseEntity<ResponseBody<MyPageStoreInfo>> getMyStoreInfo(
             @AuthenticationPrincipal UserPrincipal principal
     ) {
-        StoreInfo response = storeService.getMyStoreInfo(principal.getUserId());
+        MyPageStoreInfo response = storeService.getMyStoreInfo(principal.getUserId());
         return ResponseEntity.ok(createSuccessResponse(response));
     }
 
@@ -91,6 +92,15 @@ public class StoreController {
     @GetMapping("/user/store")
     public ResponseEntity<ResponseBody<List<StorePositionInfo>>> getStoreList() {
         List<StorePositionInfo> response = storeService.getStoreList();
+        return ResponseEntity.ok(createSuccessResponse(response));
+    }
+
+    @GetMapping("/user/store/{storeId}")
+    public ResponseEntity<ResponseBody<StoreInfo>> getStoreInfo(
+            @PathVariable Long storeId,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        StoreInfo response = storeService.getStoreInfo(storeId, principal);
         return ResponseEntity.ok(createSuccessResponse(response));
     }
 }
