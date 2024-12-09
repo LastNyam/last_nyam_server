@@ -1,5 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.user.controller;
 
+import com.lastnyam.lastnyam_server.domain.user.dto.response.LikeStoreInfo;
 import com.lastnyam.lastnyam_server.domain.user.service.UserService;
 import com.lastnyam.lastnyam_server.global.auth.domain.UserPrincipal;
 import com.lastnyam.lastnyam_server.global.response.ResponseBody;
@@ -9,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.lastnyam.lastnyam_server.global.response.ResponseUtil.createSuccessResponse;
@@ -35,5 +37,13 @@ public class LikeStoreController {
     ) {
         userService.unlikeStore(storeId, principal.getUserId());
         return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @GetMapping("/like")
+    public ResponseEntity<ResponseBody<List<LikeStoreInfo>>> getLikeStores(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        List<LikeStoreInfo> response = userService.getLikeStores(principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse(response));
     }
 }

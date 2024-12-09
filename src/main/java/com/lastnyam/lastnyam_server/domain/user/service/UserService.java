@@ -9,6 +9,7 @@ import com.lastnyam.lastnyam_server.domain.user.dto.request.UpdateNicknameReques
 import com.lastnyam.lastnyam_server.domain.user.dto.request.LoginRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.request.SignupRequest;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.CheckNicknameResponse;
+import com.lastnyam.lastnyam_server.domain.user.dto.response.LikeStoreInfo;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.LoginResponse;
 import com.lastnyam.lastnyam_server.domain.user.dto.response.UserInfo;
 import com.lastnyam.lastnyam_server.domain.user.repository.LikeStoreRepository;
@@ -16,14 +17,15 @@ import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.auth.jwt.TokenProvider;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
 import com.lastnyam.lastnyam_server.global.exception.ServiceException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -161,5 +163,21 @@ public class UserService {
                 .orElseThrow(() -> new ServiceException(ExceptionCode.LIKE_STORE_NOT_FOUND));
 
         likeStoreRepository.delete(likeStore);
+    }
+
+    @Transactional(readOnly = true)
+    public List<LikeStoreInfo> getLikeStores(Long userId) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        return likeStoreRepository.findByUser(savedUser).stream()
+                .map(LikeStore::getStore)
+                .map(store -> LikeStoreInfo.builder()
+                        .storeId(store.getId())
+                        .storeName(store.getName())
+                        .temperature(store.getTemperature())
+                        .image(store.getImage())
+                        .build()
+                ).toList();
     }
 }
