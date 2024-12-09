@@ -232,6 +232,7 @@ public class FoodPostService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<PostInfo> getPostInfoByStore(Long storeId) {
         Store savedStore = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ServiceException(ExceptionCode.STORE_NOT_FOUND));
