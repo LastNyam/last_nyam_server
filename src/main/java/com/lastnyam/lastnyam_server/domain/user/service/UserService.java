@@ -105,7 +105,7 @@ public class UserService {
 
         byte[] byteFile = null;
         try {
-            byteFile = file.getBytes();
+            byteFile = file.isEmpty() ? null : file.getBytes();
         } catch (IOException e) {
             log.error("profileImage upload error: {}", e.getMessage());
             throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);

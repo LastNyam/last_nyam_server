@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -111,6 +112,22 @@ public class StoreService {
         Store userStore = savedUser.getStore();
 
         userStore.setContactNumber(callNumber);
+    }
+
+    @Transactional
+    public void updateProfileImage(Long userId, MultipartFile file) {
+        Owner savedUser = ownerRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        byte[] byteFile = null;
+        try {
+            byteFile = file.isEmpty() ? null : file.getBytes();
+        } catch (IOException e) {
+            log.error("storeImage upload error: {}", e.getMessage());
+            throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+        }
+
+        savedUser.getStore().setImage(byteFile);
     }
 
     @Transactional(readOnly = true)

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,15 @@ public class StoreController {
             @AuthenticationPrincipal UserPrincipal principal
     ) {
         storeService.updateStoreContactNumber(request.get("callNumber"), principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @PatchMapping("/owner/store/image")
+    public ResponseEntity<ResponseBody<Void>> updateProfileImage(
+            @RequestParam("file") MultipartFile file,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        storeService.updateProfileImage(principal.getUserId(), file);
         return ResponseEntity.ok(createSuccessResponse());
     }
 
