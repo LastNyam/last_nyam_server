@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -18,6 +19,7 @@ public class RecommendRecipe {
     @JoinColumn(nullable = false)
     private FoodPost foodPost;
 
+    @Setter
     @Column(nullable = false)
     private String recipe;
 
@@ -25,6 +27,7 @@ public class RecommendRecipe {
     @Enumerated(EnumType.STRING)
     private RecipeAuthor author;
 
+    @Setter
     @Lob
     private byte[] image;
 

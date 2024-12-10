@@ -41,6 +41,7 @@ public class SecurityConfig {
                                 "/api/owner/auth/check/phone", "/api/owner/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/owner/food/{foodId}").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/owner/**").hasRole(OWNER)
+                        .requestMatchers(HttpMethod.PUT, "/api/owner/**").hasRole(OWNER)
                         .requestMatchers(HttpMethod.POST, "/api/owner/**").hasRole(OWNER)
                         .requestMatchers(HttpMethod.PATCH,"/api/owner/**").hasRole(OWNER)
                         .requestMatchers(HttpMethod.DELETE,"/api/owner/**").hasRole(OWNER)

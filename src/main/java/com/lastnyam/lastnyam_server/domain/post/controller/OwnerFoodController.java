@@ -32,6 +32,16 @@ public class OwnerFoodController {
         return ResponseEntity.ok(createSuccessResponse());
     }
 
+    @PutMapping("/{foodId}")
+    public ResponseEntity<ResponseBody<Void>> updateFoodPost(
+            @PathVariable Long foodId,
+            @ModelAttribute UploadFoodRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        foodPostService.updateFoodPost(foodId, request, principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
+
     @GetMapping
     public ResponseEntity<ResponseBody<List<PostInfo>>> getMyFoodPost(
             @AuthenticationPrincipal UserPrincipal principal

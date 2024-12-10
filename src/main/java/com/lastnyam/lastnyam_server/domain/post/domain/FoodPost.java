@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @Entity
 public class FoodPost {
@@ -41,18 +41,16 @@ public class FoodPost {
     @Column(nullable = false)
     private LocalDateTime endTime;
 
-    @Setter
     @Column(nullable = false)
     private int count;
 
-    @Column(nullable = false, columnDefinition = "LONGBLOB")
+    @Column(columnDefinition = "LONGBLOB")
     @Lob
     private byte[] image;
 
     @Column(nullable = false)
     private int reservationTimeLimit;
 
-    @Setter
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PostStatus status;

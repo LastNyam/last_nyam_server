@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,16 +45,18 @@ public class FoodPostService {
     @Transactional
     public void uploadFoodPost(UploadFoodRequest request, Long userId) {
         byte[] foodImage = null;
-        try {
-            foodImage = request.getFoodImage().getBytes();
-        } catch (IOException e) {
-            throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+        if (request.getFoodImage() != null) {
+            try {
+                foodImage = request.getFoodImage().getBytes();
+            } catch (IOException e) {
+                throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+            }
         }
 
         byte[] recipeImage = null;
         if (request.getRecipeImage() != null) {
             try {
-                recipeImage = request.getFoodImage().getBytes();
+                recipeImage = request.getRecipeImage().getBytes();
             } catch (IOException e) {
                 throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
             }
@@ -92,6 +95,76 @@ public class FoodPostService {
         }
 
         // TODO. 관심매장 알림
+    }
+
+    @Transactional
+    public void updateFoodPost(Long foodId, UploadFoodRequest request, Long userId) {
+        byte[] foodImage = null;
+        if (request.getFoodImage() != null) {
+            try {
+                foodImage = request.getFoodImage().getBytes();
+            } catch (IOException e) {
+                throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+            }
+        }
+
+        byte[] recipeImage = null;
+        if (request.getRecipeImage() != null) {
+            try {
+                recipeImage = request.getRecipeImage().getBytes();
+            } catch (IOException e) {
+                throw new ServiceException(ExceptionCode.FILE_IO_EXCEPTION);
+            }
+        }
+
+        Owner savedUser = ownerRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        FoodCategory savedCategory = foodCategoryRepository.findByName(request.getFoodCategory())
+                .orElseThrow(() -> new ServiceException(ExceptionCode.FOOD_CATEGORY_NOT_FOUND));
+
+        FoodPost savedFoodPost = foodPostRepository.findById(foodId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.FOOD_POST_NOT_FOUND));
+
+        if (!savedFoodPost.getStore().equals(savedUser.getStore())) {
+            throw new ServiceException(ExceptionCode.FORBIDDEN);
+        }
+
+        savedFoodPost.setCategory(savedCategory);
+        savedFoodPost.setFoodName(request.getFoodName());
+        savedFoodPost.setContent(request.getContent());
+        savedFoodPost.setOriginPrice(request.getOriginPrice());
+        savedFoodPost.setDiscountPrice(request.getDiscountPrice());
+        savedFoodPost.setEndTime(request.getEndTime());
+        savedFoodPost.setCount(request.getCount());
+        savedFoodPost.setReservationTimeLimit(request.getReservationTime());
+        savedFoodPost.setImage(foodImage);
+
+        Optional<RecommendRecipe> optionalRecipe = recipeRepository.findByFoodPostAndAuthor(savedFoodPost, RecipeAuthor.OWNER);
+
+        if (optionalRecipe.isPresent()) {
+            RecommendRecipe recipe = optionalRecipe.get();
+            if (request.getRecipe() != null) {
+                recipe.setRecipe(request.getRecipe());
+                recipe.setImage(recipeImage);
+            } else {
+                recipeRepository.delete(recipe);
+            }
+            return;
+        }
+
+        if (request.getRecipe() == null) {
+            return;
+        }
+
+        recipeRepository.save(
+                RecommendRecipe.builder()
+                        .foodPost(savedFoodPost)
+                        .recipe(request.getRecipe())
+                        .author(RecipeAuthor.OWNER)
+                        .image(recipeImage)
+                .build()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -152,6 +225,10 @@ public class FoodPostService {
                     .ifPresent(it -> {
                         throw new ServiceException(ExceptionCode.FOOD_POST_RESERVATION_EXISTS);
                     });
+        }
+
+        if (postStatus == PostStatus.AVAILABLE) {
+            // TODO. 소비자 알림
         }
 
         savedFoodPost.setStatus(postStatus);
