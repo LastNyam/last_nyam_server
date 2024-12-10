@@ -35,6 +35,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((auth) -> auth
+                        // fcm test /api/fcm
+                        .requestMatchers(HttpMethod.POST, "/api/fcm/**").permitAll()
+
                         // owner
                         .requestMatchers(HttpMethod.POST,
                                 "/api/owner/auth/signup", "/api/owner/auth/send-code/phone",

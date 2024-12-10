@@ -17,6 +17,8 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 import static com.lastnyam.lastnyam_server.global.response.ResponseUtil.createSuccessResponse;
 
 @Controller
@@ -67,5 +69,14 @@ public class UserController {
     ) {
         UserInfo response = userService.getMyInformation(principal.getUserId());
         return ResponseEntity.ok(createSuccessResponse(response));
+    }
+
+    @PostMapping("/fcm/register")
+    public ResponseEntity<ResponseBody<Void>> uploadFCM(
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        userService.uploadFCM(principal.getUserId(), request.get("token"));
+        return ResponseEntity.ok(createSuccessResponse());
     }
 }

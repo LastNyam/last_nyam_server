@@ -180,4 +180,12 @@ public class UserService {
                         .build()
                 ).toList();
     }
+
+    @Transactional
+    public void uploadFCM(Long userId, String token) {
+        User savedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.USER_NOT_FOUND));
+
+        savedUser.setFcmToken(token);
+    }
 }

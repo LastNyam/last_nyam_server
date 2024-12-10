@@ -38,6 +38,9 @@ public class User extends AuditEntity {
     @Column(nullable = false)
     private UserRole role;
 
+    @Setter
+    private String fcmToken;
+
     @Builder
     public User(String phoneNumber, String nickname, String password, boolean acceptsMarketing) {
         this.phoneNumber = phoneNumber;
