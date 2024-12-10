@@ -1,5 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.reservation.controller;
 
+import com.lastnyam.lastnyam_server.domain.reservation.domain.ReservationStatus;
 import com.lastnyam.lastnyam_server.domain.reservation.dto.response.ReservationInfoByOwner;
 import com.lastnyam.lastnyam_server.domain.reservation.dto.request.ReservationRequest;
 import com.lastnyam.lastnyam_server.domain.reservation.dto.response.ReservationInfoByUser;
@@ -74,6 +75,16 @@ public class ReservationController {
             @AuthenticationPrincipal UserPrincipal principal
     ) {
         reservationService.reservationCancelByUser(reservationId, principal.getUserId());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @PatchMapping("/owner/reservation/{reservationId}/status")
+    public ResponseEntity<ResponseBody<Void>> updateReservationStatus(
+            @PathVariable Long reservationId,
+            @RequestBody @Valid Map<String, ReservationStatus> request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        reservationService.updateReservationStatus(reservationId, request.get("status"), principal.getUserId());
         return ResponseEntity.ok(createSuccessResponse());
     }
 }

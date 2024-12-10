@@ -175,4 +175,12 @@ public class ReservationService {
 
         foodPostRepository.increaseStock(reservation.getFoodPost().getId(), reservation.getNumber());
     }
+
+    @Transactional
+    public void updateReservationStatus(Long reservationId, ReservationStatus status, Long userId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ServiceException(ExceptionCode.RESERVATION_NOT_FOUND));
+
+        reservation.setStatus(status);
+    }
 }
