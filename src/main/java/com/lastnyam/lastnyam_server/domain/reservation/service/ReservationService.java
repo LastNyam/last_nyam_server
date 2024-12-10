@@ -148,6 +148,8 @@ public class ReservationService {
             throw new ServiceException(ExceptionCode.CONCURRENT_UPDATE);
         }
 
+        foodPostRepository.increaseStock(savedReservation.getFoodPost().getId(), savedReservation.getNumber());
+
         // TODO. 사용자에 알림
     }
 
@@ -170,5 +172,7 @@ public class ReservationService {
         if (modifiedRow == 0) {
             throw new ServiceException(ExceptionCode.CONCURRENT_UPDATE_OWNER);
         }
+
+        foodPostRepository.increaseStock(reservation.getFoodPost().getId(), reservation.getNumber());
     }
 }

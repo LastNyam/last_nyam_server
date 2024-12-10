@@ -22,5 +22,10 @@ public interface FoodPostRepository extends JpaRepository<FoodPost, Long> {
             "WHERE f.id = :id AND f.count >= :amount AND f.status = 'AVAILABLE'")
     int decreaseStock(@Param("id") Long id, @Param("amount") int amount);
 
+    @Modifying
+    @Query("UPDATE FoodPost f SET f.count = f.count + :amount " +
+            "WHERE f.id = :id AND f.status = 'AVAILABLE'")
+    int increaseStock(@Param("id") Long id, @Param("amount") int amount);
+
     List<FoodPost> findAllByStoreAndStatus(Store store, PostStatus status);
 }
