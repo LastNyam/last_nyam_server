@@ -100,6 +100,7 @@ public class ReservationService {
                         .foodName(r.getFoodPost().getFoodName())
                         .number(r.getNumber())
                         .price(r.getNumber()*r.getFoodPost().getDiscountPrice())
+                        .deadLine(r.getFoodPost().getReservationTimeLimit())
                         .reservationDate(r.getAcceptTime())
                         .build())
                 .toList();

@@ -18,5 +18,6 @@ public class ReservationInfoByOwner {
     private String foodName;
     private int number;
     private int price;
+    private int deadLine;
     private LocalDateTime reservationDate;
 }
