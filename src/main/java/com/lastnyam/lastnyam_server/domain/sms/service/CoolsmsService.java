@@ -1,5 +1,6 @@
 package com.lastnyam.lastnyam_server.domain.sms.service;
 
+import com.lastnyam.lastnyam_server.domain.owner.repository.OwnerRepository;
 import com.lastnyam.lastnyam_server.domain.sms.dto.request.CheckCodeRequest;
 import com.lastnyam.lastnyam_server.domain.user.repository.UserRepository;
 import com.lastnyam.lastnyam_server.global.exception.ExceptionCode;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class CoolsmsService {
 	private final UserRepository userRepository;
+	private final OwnerRepository ownerRepository;
 
 	@Value("${coolsms.api.key}")
 	private String apiKey;
@@ -34,16 +36,29 @@ public class CoolsmsService {
 
 	private Map<String, String> codeStorage = new ConcurrentHashMap<>();
 
-	public void sendsms(String to) {
-		log.info("send sms request phoneNumber: {}", to);
+	public void sendsmsByUser(String to) {
+		log.info("send sms request(user) phoneNumber: {}", to);
 		userRepository.findByPhoneNumber(to)
 				.ifPresent(it -> {
 					throw new ServiceException(ExceptionCode.DUPLICATED_PHONE_NUMBER);
 				});
 
+		this.sandsmd(parsePhoneNumber(to));
+	}
+
+	public void sendsmsByOwner(String to) {
+		log.info("send sms request(owner) phoneNumber: {}", to);
+		ownerRepository.findByPhoneNumber(to)
+				.ifPresent(it -> {
+					throw new ServiceException(ExceptionCode.DUPLICATED_PHONE_NUMBER);
+				});
+
+		this.sandsmd(parsePhoneNumber(to));
+	}
+
+	private void sandsmd(String toPhoneNumber) {
 		String numStr = generateRandomNumber();
 
-		String toPhoneNumber = parsePhoneNumber(to);
 		codeStorage.put(toPhoneNumber, numStr);
 		// 사용자가 한번 하고 또 보냈다면? 동시성 문제 이슈로 일단 제거
 //		Executors.newSingleThreadScheduledExecutor().schedule(() -> codeStorage.remove(toPhoneNumber), 5, TimeUnit.MINUTES);

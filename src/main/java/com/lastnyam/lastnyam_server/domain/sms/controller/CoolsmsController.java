@@ -20,9 +20,15 @@ import static com.lastnyam.lastnyam_server.global.response.ResponseUtil.createSu
 public class CoolsmsController {
     private final CoolsmsService coolsmsService;
 
-    @PostMapping({"/user/auth/send-code/phone", "/owner/auth/send-code/phone"})
-    public ResponseEntity<ResponseBody<Void>> sendsms(@RequestBody SendCoolsmsRequest request) {
-        coolsmsService.sendsms(request.getPhoneNumber());
+    @PostMapping("/user/auth/send-code/phone")
+    public ResponseEntity<ResponseBody<Void>> sendsmsByUser(@RequestBody SendCoolsmsRequest request) {
+        coolsmsService.sendsmsByUser(request.getPhoneNumber());
+        return ResponseEntity.ok(createSuccessResponse());
+    }
+
+    @PostMapping("/owner/auth/send-code/phone")
+    public ResponseEntity<ResponseBody<Void>> sendsmsByOwner(@RequestBody SendCoolsmsRequest request) {
+        coolsmsService.sendsmsByOwner(request.getPhoneNumber());
         return ResponseEntity.ok(createSuccessResponse());
     }
 
