@@ -24,7 +24,7 @@ import java.util.Date;
 @Component
 public class TokenProvider implements AuthenticationProvider {
     // 만료 시간 3시간으로 해둠. 필요 시 추후 변경
-    private final long EXPIRATION_TIME = 3*60*60*1000L;
+    private final long EXPIRATION_TIME = 24*60*60*1000L;
     private final LastnyamUserDetailsService userDetailsService;
 
     @Value("${jwt.secret-key}")
