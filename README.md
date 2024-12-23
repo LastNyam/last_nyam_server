@@ -75,5 +75,6 @@ last_nyam_server/
 - **어플리케이션 호스팅**: AWS EC2 (ubuntu 24.04)
 - **빌드 도구**: Gradle (v8.10.2)
 - **버전 관리**: Git
+- **CI/CD 도구**: GitHub Action, AWS CodeDeploy
 
 
