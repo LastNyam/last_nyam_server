@@ -8,7 +8,7 @@
 
 -> [앱 주요 기능 확인 - 프론트엔드 repo](https://github.com/LastNyam/last_nyam_fe?tab=readme-ov-file#-%EF%B8%8F%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5)
 
-
+<br/>
 
 ## ✨ 주요 기능
 - JWT를 사용한 사용자(업주 사용자 및 소비자 사용자) 인증 및 관리
@@ -16,10 +16,11 @@
 - AWS와의 통합으로 확장성과 안정성 제공
 - Spring Boot 프레임워크를 활용한 효율적인 백엔드 운영
 
-
+<br/>
 
 ## 🛠️ 시스템 구성
 시스템 구성은 클라이언트-서버 모델을 따른다.
+
 ![System Architecture](https://github.com/user-attachments/assets/2768f5d2-4b63-4361-bdc8-29c8a455c896)
 
 1. **사용자**: 모바일 또는 웹 클라이언트를 통해 애플리케이션과 상호작용.
@@ -27,7 +28,7 @@
 3. **MySQL 데이터베이스**: 애플리케이션 데이터를 저장하며, AWS RDS에서 호스팅되어 Spring 서버와 연결됨.
 4. **개발자**: Spring Boot와 데이터베이스 기술을 활용하여 백엔드를 유지 관리하고 개선.
 
-
+<br/>
 
 ## 📂 프로젝트 구조
 
@@ -66,7 +67,7 @@ last_nyam_server/
 
 ```
 
-
+<br/>
 
 ## 🛠️ 프레임워크 및 도구
 
@@ -77,4 +78,4 @@ last_nyam_server/
 - **버전 관리**: Git
 - **CI/CD 도구**: GitHub Action, AWS CodeDeploy
 
-
+<br/>
